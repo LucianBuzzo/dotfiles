@@ -1,0 +1,9 @@
+# Ignore vim generated swap files
+*.swp
+*.un~
+
+vim/.vimbackups/.undo/*
+vim/.vimbackups/.swp/*
+vim/.vimbackups/.backup/*
+
+slackServer/node_modules
