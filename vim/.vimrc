@@ -16,12 +16,10 @@ set nocompatible
 set modelines=0
 
 "BACKUP SETTINGS
-"set nobackup
-"set nowritebackup
-set backupcopy=yes
-set backupdir=~/.vimbackups/.backup//
-set directory=~/.vimbackups/.swp//
-set undodir=~/.vimbackups/.undo//
+set nobackup
+set nowritebackup
+set noswapfile
+set noundofile
 
 " REMOVE WHITESPACE ON SAVE
 ":autocmd BufWritePost * :StripWhitespace
@@ -62,7 +60,6 @@ set visualbell
 set cursorline
 "set ttyfast
 set backspace=indent,eol,start
-set undofile
 set relativenumber
 " When the page starts to scroll, keep the cursor 8 lines from the top and 8
 " lines from the bottom
@@ -232,8 +229,6 @@ vmap <C-c> :w !pbcopy<CR><CR>
 "CODE COMBAT
 augroup codecombat_setup " {
   au BufRead,BufNewFile *.ccjs set filetype=javascript
-  au FileType javascript setlocal dictionary+=~/.dotfiles/codecombat/lib/**
-  au BufRead,BufNewFile *.ccjs argadd ~/.dotfiles/codecombat/lib/ccFunctions.ccjs
 
 
 augroup END " }
@@ -258,6 +253,8 @@ let g:syntastic_enable_balloons = 1
 let g:syntastic_enable_signs = 1
 let g:CSSLint_FileTypeList = ['css', 'less', 'sess']
 let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_coffee_checkers = ['coffeelint']
+let g:syntastic_typescript_checkers = ['tslint']
 let g:syntastic_php_checkers = ['php', 'phpmd']
 let g:syntastic_php_phpmd_post_args = '~/phpmd-ruleset.xml'
 let g:syntastic_css_csslint_args="--ignore=unique-headings,qualified-headings,adjoining-classes,universal-selector,floats,important,box-model"

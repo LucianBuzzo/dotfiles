@@ -11,6 +11,10 @@ if [ -f /etc/motd ]; then
   echo
 fi
 
+# Load bash auto completion script
+if [ -f ~/.git-completion.bash ]; then
+  . ~/.git-completion.bash
+fi
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && dirname $(readlink .bash_profile) )
 
@@ -77,7 +81,7 @@ function git_color {
     if [[ "$STATUS" == *'Not a git repository'* ]]
         then echo ""
     else
-    if [[ "$STATUS" != *'working directory clean'* ]]
+    if [[ "$STATUS" != *'working tree clean'* ]]
         then
         # red if need to commit
         echo -e '\033[38;5;160m'
@@ -135,6 +139,10 @@ if [ !SSH_SESSION ]
     # Generate a 10 char password using md5
     alias generatepass='date | md5 | cut -c1-10'
 fi
+
+function findin {
+  grep -Rl "$@"
+}
 
 # If we're running on the local machine grab Brew installed vim, otherwise find
 # out where vim is installed and run that instead
