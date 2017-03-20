@@ -1,3 +1,6 @@
+" To disable a plugin, add it's bundle name to the following list
+let g:pathogen_disabled = []
+
 set runtimepath+=~/.dotfiles/vim
 execute pathogen#infect('bundle/{}', '~/.dotfiles/vim/bundle/{}')
 syntax on
@@ -14,6 +17,11 @@ set noeb vb t_vb=
 "Removes vi compatibility
 set nocompatible
 set modelines=0
+
+" Neomake setup
+autocmd! BufWritePost,BufWinEnter * Neomake
+let g:neomake_open_list = 2
+
 
 "BACKUP SETTINGS
 set nobackup
@@ -140,13 +148,6 @@ vnoremap <F1> <ESC>
 
 nnoremap ; :
 
-"Save on losing focus
-"
-function! FocusLostWrite()
-  execute '!normal wa'
-endfunction
-autocmd FocusLost * silent! wall
-"set list
 "set listchars=tab:▸\ ,eol:¬
 
 "Windows
@@ -190,24 +191,24 @@ autocmd BufRead,BufNewFile *.mdown    setlocal spell spelllang=en_gb
 "JAVASCRIPT CONFIG
 "au BufRead,BufNewFile *.ect set filetype=html
 
-"SOLARIZED CONFIG
+"Theme
 "let g:solarized_termcolors=256
-let g:solarized_visibility = "high"
-let g:solarized_contrast = "high"
-let g:solarized_termcolors=16
-set background=light
-colorscheme solarized
+"let g:solarized_visibility = "high"
+"let g:solarized_contrast = "high"
+"let g:solarized_termcolors=16
+"colorscheme solarized
 
-"PENCIL THEME
-let g:pencil_terminal_italics = 1
-"set background=dark
-"colorscheme pencil
+"colorscheme 1989
+colorscheme OceanicNext
+"colorscheme antares
+"colorscheme bubblegum
+set background=dark
 
 "AIRLINE CONFIG
 set laststatus=2
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='solarized'
+let g:airline_theme='bubblegum'
 "let g:airline_theme = 'pencil'
 
 "NERDTREE CONFIG
@@ -236,43 +237,6 @@ augroup END " }
 
 "AUTOCOMPLETE
 let g:SuperTabDefaultCompletionType = "<c-n>"
-
-"SYNTASTIC
-
-nnoremap <leader>st :SyntasticToggleMode<CR>
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_enable_balloons = 1
-let g:syntastic_enable_signs = 1
-let g:CSSLint_FileTypeList = ['css', 'less', 'sess']
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_coffee_checkers = ['coffeelint']
-let g:syntastic_typescript_checkers = ['tslint']
-let g:syntastic_php_checkers = ['php', 'phpmd']
-let g:syntastic_php_phpmd_post_args = '~/phpmd-ruleset.xml'
-let g:syntastic_css_csslint_args="--ignore=unique-headings,qualified-headings,adjoining-classes,universal-selector,floats,important,box-model"
-"let g:syntastic_stl_format = '[%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]'
-let syntastic_mode_map = { 'passive_filetypes': ['html'] }
-let g:syntastic_ignore_files = ['.sqg$']
-
-highlight SyntasticErrorLine guibg=#eee8d6
-highlight SyntasticWarningLine guibg=#eee8d6
-highlight SyntasticWarning guibg=#c94c22 guifg=#fdf6e4
-highlight SyntasticError guibg=#c94c22 guifg=#fdf6e4
-
-highlight link SyntasticError SpellBad
-highlight link SyntasticWarning SpellCap
-
-
-"SYNTASTIC SASS
-let g:syntastic_scss_checkers = ['scss_lint']
 
 "FUNCTIONS FOR ABBREVIATING COMMANDS
 fu! Single_quote(str)
@@ -310,27 +274,6 @@ let g:EasyMotion_smartcase = 1
 
 " JSDOC
 au BufRead,BufNewFile *.js     inoremap <buffer> <C-d> :JsDoc<CR>
-
-"PHP DOC
-au BufRead,BufNewFile *.php     inoremap <buffer> <C-d> :call PhpDoc()<CR>
-au BufRead,BufNewFile *.php     nnoremap <buffer> <C-d> :call PhpDoc()<CR>
-au BufRead,BufNewFile *.php     vnoremap <buffer> <C-d> :call PhpDocRange()<CR>
-au BufRead,BufNewFile *.inc     inoremap <buffer> <C-d> :call PhpDoc()<CR>
-au BufRead,BufNewFile *.inc     nnoremap <buffer> <C-d> :call PhpDoc()<CR>
-au BufRead,BufNewFile *.inc     vnoremap <buffer> <C-d> :call PhpDocRange()<CR>
-au BufRead,BufNewFile *.module  inoremap <buffer> <C-d> :call PhpDoc()<CR>
-au BufRead,BufNewFile *.module  nnoremap <buffer> <C-d> :call PhpDoc()<CR>
-au BufRead,BufNewFile *.module  vnoremap <buffer> <C-d> :call PhpDocRange()<CR>
-au BufRead,BufNewFile *.install inoremap <buffer> <C-d> :call PhpDoc()<CR>
-au BufRead,BufNewFile *.install nnoremap <buffer> <C-d> :call PhpDoc()<CR>
-au BufRead,BufNewFile *.install vnoremap <buffer> <C-d> :call PhpDocRange()<CR>
-
-
-
-
-
-
-
 
 function! Wipeout()
   " list of *all* buffer numbers
@@ -435,51 +378,3 @@ endfunction
 let g:shellasync_terminal_insert_on_enter  = 0
 let g:shellasync_print_return_value  = 1
 
-"=====[ Slack integration ]=====
-
-nnoremap <leader>* <S-v>y:call P('<C-R><C-R>" <C-R><C-R>=expand("%:e")<CR>')<CR> <S-v>d
-inoremap <C-d> <ESC><S-v>y:call P('<C-R><C-R>" <C-R><C-R>=expand("%:e")<CR>')<CR> <S-v>di
-nnoremap <C-d> <S-v>y:call P('<C-R><C-R>" <C-R><C-R>=expand("%:e")<CR>')<CR> <S-v>d
-nnoremap <leader>@ :call P('')<left><left>
-
-function! VtoP()
-  let line = getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]]
-  echom line
-endfunction
-
-function! P(words)
-  let message = ':vim: ' . a:words
-  let token = 'xoxp-3937044139-4636353582-4755857638-30ece2'
-  let channel = 'C03TK1A61'
-  let text = substitute(message, ' ', '%20', 'g')
-  let resp = system('curl "https://slack.com/api/chat.postMessage?token=' . token . '&channel=' . channel . '&as_user=true&text=' . text . '"')
-  let success = matchstr(resp, '"ok":true')
-  if empty(success)
-    echom 'Message sending failed'
-  else
-    echom 'Message sent'
-  endif
-endfunction
-
-nnoremap <leader>M :vnew<CR>:setlocal filetype=scratch<CR>:split ~/.dotfiles/slackServer/message.log<CR>:setlocal autoread<CR>:setlocal updatetime=100<CR>:au CursorHold * checktime<CR><C-w>j:call SlackMap()<CR>
-
-function! SlowUpdate()
-  sleep 500m
-  checktime
-endfunction
-
-function! SlackMessenger()
-  silent! echom system('node ~/.dotfiles/slackServer/server.js')
-endfunction
-
-
-function! SlackMap()
-  silent! echom system('forever stop ~/.dotfiles/slackServer/server.js');
-  silent! echom system('forever start ~/.dotfiles/slackServer/server.js');
-  autocmd VimLeave * !forever stop ~/.dotfiles/slackServer/server.js
-  inoremap <buffer> <CR> <ESC><S-v>y:call P('<C-R><C-R>" <C-R><C-R>=expand("%:e")<CR>')<CR><S-v>d:call SlowUpdate()<CR><C-w>kG<C-w>ji
-  nnoremap <buffer> <CR> <ESC><S-v>y:call P('<C-R><C-R>" <C-R><C-R>=expand("%:e")<CR>')<CR><S-v>d:call SlowUpdate()<CR><C-w>kG<C-w>j
-endfunction
-
-"=====[ instant markdown ]=====
-let g:instant_markdown_slow = 0
