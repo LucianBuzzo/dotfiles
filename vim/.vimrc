@@ -20,7 +20,7 @@ set modelines=0
 
 " Neomake setup
 autocmd! BufWritePost,BufWinEnter * Neomake
-let g:neomake_open_list = 2
+"let g:neomake_open_list = 2
 
 
 "BACKUP SETTINGS
@@ -148,6 +148,14 @@ vnoremap <F1> <ESC>
 
 nnoremap ; :
 
+"Save on losing focus		
+"		
+function! FocusLostWrite()		
+  execute '!normal wa'		
+endfunction		
+autocmd FocusLost * silent! wall		
+
+"set list		
 "set listchars=tab:▸\ ,eol:¬
 
 "Windows
@@ -192,24 +200,22 @@ autocmd BufRead,BufNewFile *.mdown    setlocal spell spelllang=en_gb
 "au BufRead,BufNewFile *.ect set filetype=html
 
 "Theme
-"let g:solarized_termcolors=256
-"let g:solarized_visibility = "high"
-"let g:solarized_contrast = "high"
-"let g:solarized_termcolors=16
-"colorscheme solarized
+let g:solarized_termcolors=16
+let g:solarized_visibility = "high"
+let g:solarized_contrast = "high"
+colorscheme solarized
 
 "colorscheme 1989
-colorscheme OceanicNext
+"colorscheme OceanicNext
 "colorscheme antares
 "colorscheme bubblegum
-set background=dark
+set background=light
 
 "AIRLINE CONFIG
 set laststatus=2
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='bubblegum'
-"let g:airline_theme = 'pencil'
+let g:airline_theme='solarized'
 
 "NERDTREE CONFIG
 map <C-n> :NERDTreeToggle<CR>
