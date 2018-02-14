@@ -26,6 +26,15 @@ do
   . "$f"
 done
 
+function cs-to-ts() {
+  decaffeinate $1
+  mv $(echo $1 | sed 's/\.coffee/\.js/') $(echo $1 | sed 's/\.coffee/\.ts/')
+  git rm $1
+  npm run prettify
+  code -r $(echo $1 | sed 's/\.coffee/\.ts/')
+  git add $(echo $1 | sed 's/\.coffee/\.ts/')
+}
+
 # Detect if we're in an SSH session
 function is_ssh() {
 	if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
@@ -201,3 +210,14 @@ export PATH="/usr/local/heroku/bin:$PATH"
 export PATH="~/.composer/vendor/bin:$PATH"
 
 alias diary='cd ~/journal && vim `date +"%Y-%m-%d"`.markdown'
+
+function findfilename {
+  find $PWD | grep "$@"
+}
+
+export PATH="$HOME/.yarn/bin:$PATH"
+
+alias uistart='cd ~/projects/resin-ui && API_HOST=api.resinstaging.io npm start'
+
+alias stagingCommit='curl -s https://dashboard.resinstaging.io | grep COMMIT'
+

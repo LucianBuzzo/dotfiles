@@ -6,7 +6,8 @@ execute pathogen#infect('bundle/{}', '~/.dotfiles/vim/bundle/{}')
 syntax on
 filetype plugin indent on
 
-set autochdir
+"Automatically change directory to current file Borks <C-p> though :(
+"set autochdir
 
 "Set title so that dc-autoswap plugin works
 set title titlestring=
@@ -83,7 +84,7 @@ set guioptions-=R
 set guioptions-=L
 "Font
 "set guifont=droid\ sans\ mono\ for\ powerline:h12
-set guifont=Sauce\ Code\ Powerline:h14
+set guifont=Sauce\ Code\ Powerline:h12
 
 set ignorecase
 set smartcase
@@ -148,15 +149,17 @@ vnoremap <F1> <ESC>
 
 nnoremap ; :
 
-"Save on losing focus		
-"		
-function! FocusLostWrite()		
-  execute '!normal wa'		
-endfunction		
-autocmd FocusLost * silent! wall		
+"Save on losing focus
+"
+function! FocusLostWrite()
+  execute '!normal wa'
+endfunction
+autocmd FocusLost * silent! wall
 
-"set list		
-"set listchars=tab:▸\ ,eol:¬
+"set list
+"set listchars=tab:▸\
+"set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:␣
+"hi NonText ctermfg=7 guifg=gray guibg=black
 
 "Windows
 nnoremap <C-h> <C-w>h
