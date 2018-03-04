@@ -18,22 +18,9 @@ link_file() {
       ln -sf "$DIR"/"$origin" "$dest"
     else
       printf "\033[38;5;160mA $(basename $dest) file already exists in your home directory.\n"
-      printf "\033[38;5;240mWould you like to overwrite it with a symlink to ${dest}?\n"
-      #read -n 1 replace
-      select replace in "Yes" "No"; do
-        case $replace in
-          Yes )
-            printf "$dialogue"
-            ln -sf "$DIR"/"$origin" "$dest";
-            break
-            ;;
-          No )
-            printf "\033[38;5;136mNot symlinking and continuing with setup.\n"
-            break
-            ;;
-        esac
-      done
-      echo
+      printf "\033[38;5;240mOverwriting it with a symlink to ${dest}?\n"
+      printf "$dialogue"
+      ln -sf "$DIR"/"$origin" "$dest";
     fi
   fi
 }
