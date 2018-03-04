@@ -44,9 +44,11 @@ setuplinklist=(
   "vim ${HOME}/.config/nvim"
   ".inputrc ${HOME}/.inputrc"
   "bash/.bash_profile ${HOME}/.bash_profile"
+  "oni.config.js ${HOME}/.oni/config.js"
 )
 
 mkdir -p ~/.config
+mkdir -p ~/.oni
 
 for i in "${setuplinklist[@]}"; do
   link_file $i

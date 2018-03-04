@@ -84,7 +84,7 @@ set guioptions-=R
 set guioptions-=L
 "Font
 "set guifont=droid\ sans\ mono\ for\ powerline:h12
-set guifont=Sauce\ Code\ Powerline:h12
+set guifont=Sauce\ Code\ Powerline:h16
 
 set ignorecase
 set smartcase
