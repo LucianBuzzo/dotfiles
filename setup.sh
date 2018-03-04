@@ -41,9 +41,12 @@ link_file() {
 setuplinklist=(
   "vim/.vimrc ${HOME}/.vimrc"
   "vim/.vimbackups/ ${HOME}/.vimbackups"
+  "vim ${HOME}/.config/nvim"
   ".inputrc ${HOME}/.inputrc"
   "bash/.bash_profile ${HOME}/.bash_profile"
 )
+
+mkdir -p ~/.config
 
 for i in "${setuplinklist[@]}"; do
   link_file $i
@@ -53,5 +56,5 @@ printf "\033[38;5;64mSetup complete, please reload your shell to see any changes
 
 # TODO: get the reload working correctly
 # echo "\033[38;5;64mSetup complete, reloading now...\033[0m"
-# 
+#
 # exec bash -lis
