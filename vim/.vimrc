@@ -109,20 +109,12 @@ nnoremap <silent> <Leader>- :exe "vertical resize " . (winwidth(0) * 3/4)<CR>
 nnoremap <silent> <Leader>v= :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> <Leader>v- :exe "resize " . (winheight(0) * 2/3)<CR>
 nnoremap <leader>i =i{
-nnoremap <leader>1 :set background=light<cr>
-nnoremap <leader>2 :set background=dark<cr>
 nnoremap <leader>co ggj<S-v>G:w<space>!pbcopy<CR><CR>
-nnoremap <leader>ps [{j<S-v>]}k:CSScomb<esc>
+nnoremap <leader>gs :Gstatus
 "Folding
 nnoremap <leader>f za
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
-nnoremap <leader>a= :Tabularize /=<CR>
-vnoremap <leader>a= :Tabularize /=<CR>
-nnoremap <leader>a: :Tabularize /:\zs<CR>
-vnoremap <leader>a: :Tabularize /:\zs<CR>
-nnoremap <leader>def :call DrupalExportField()<CR>
-nnoremap <leader>dcc :call DrupalDrushCCall()<CR>
 
 " Typos
 command! -bang E e<bang>
@@ -172,24 +164,8 @@ inoremap § <Esc>
 vnoremap § <Esc>
 nnoremap § <Esc>
 
-"SQUIGGLE LANG
-au BufRead,BufNewFile *.sqg set filetype=javascript
-
-"NODE TEMPLATING
-au BufRead,BufNewFile *.ect set filetype=html
-
 "FORTRAN
 "au BufRead,BufNewFile *.f95 set filetype=html
-
-"DRUPAL CONFIG
-au BufRead,BufNewFile *.drush set filetype=php
-au BufRead,BufNewFile *.module set filetype=php
-au BufRead,BufNewFile *.inc set filetype=php
-au BufRead,BufNewFile *.install set filetype=php
-au BufRead,BufNewFile *.rule set filetype=php
-au BufRead,BufNewFile *.test set filetype=php
-
-au BufRead,BufNewFile *.theme set filetype=php
 
 "MARKDOWN
 autocmd BufRead,BufNewFile *.md       setlocal spell spelllang=en_gb
@@ -208,22 +184,13 @@ let g:solarized_visibility = "high"
 let g:solarized_contrast = "high"
 colorscheme solarized
 
-"colorscheme 1989
-"colorscheme OceanicNext
-"colorscheme antares
-"colorscheme bubblegum
 set background=light
 
-"AIRLINE CONFIG
-set laststatus=2
-let g:airline_powerline_fonts=1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='solarized'
-
 "NERDTREE CONFIG
+"map <C-n> to open nerdtree file viewer
 map <C-n> :NERDTreeToggle<CR>
-
-"EMMET CONFIG
+"Show hidden files (files starting with a dot)
+let NERDTreeShowHidden=1
 
 "VIM MAGIC
 augroup reload_vimrc " {
@@ -235,18 +202,6 @@ augroup END " }
 "MAC Keybinds
 vmap <C-c> :w !pbcopy<CR><CR>
 
-
-"CODE COMBAT
-augroup codecombat_setup " {
-  au BufRead,BufNewFile *.ccjs set filetype=javascript
-
-
-augroup END " }
-
-
-"AUTOCOMPLETE
-let g:SuperTabDefaultCompletionType = "<c-n>"
-
 "FUNCTIONS FOR ABBREVIATING COMMANDS
 fu! Single_quote(str)
     return "'" . substitute(copy(a:str), "'", "''", 'g') . "'"
@@ -256,10 +211,6 @@ fu! Cabbrev(key, value)
     exe printf('cabbrev <expr> %s (getcmdtype() == ":" && getcmdpos() <= %d) ? %s : %s',
         \ a:key, 1+len(a:key), Single_quote(a:value), Single_quote(a:key))
 endfu
-
-"ALIAS CSScomb command to Psort
-cabbrev Psort CSScomb
-
 
 "CTRL P setup
 let g:ctrlp_map = '<c-p>'
@@ -280,9 +231,6 @@ nmap s <Plug>(easymotion-s2)
 " Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
 
-
-" JSDOC
-au BufRead,BufNewFile *.js     inoremap <buffer> <C-d> :JsDoc<CR>
 
 function! Wipeout()
   " list of *all* buffer numbers
@@ -318,10 +266,16 @@ function! Wipeout()
 endfunction
 
 nnoremap <leader>wo :call Wipeout()<CR>
+
+
+"=============================================================
+
 " Vim global plugin for highlighting matches
 " Last change:  Thu Dec 19 16:08:21 EST 2013
 " Maintainer: Damian Conway
 " License:  This file is placed in the public domain.
+
+"=============================================================
 
 " If already loaded, we're done...
 if exists("loaded_HLNext")
@@ -382,8 +336,4 @@ function! HLNextMovedTrigger ()
     augroup END
     call HLNext()
 endfunction
-
-"=====[ ShellAsync ]=====
-let g:shellasync_terminal_insert_on_enter  = 0
-let g:shellasync_print_return_value  = 1
 

@@ -1,9 +1,14 @@
 # Ignore vim generated swap files
-*.swp
+.sw[a-p]
+.*.sw[a-p]
 *.un~
 
 vim/.vimbackups/.undo/*
 vim/.vimbackups/.swp/*
 vim/.vimbackups/.backup/*
 
-slackServer/node_modules
+Session.vim
+.netrwhist
+*~
+tags
+
