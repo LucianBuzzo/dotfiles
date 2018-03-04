@@ -114,7 +114,7 @@ nnoremap <silent> <Leader>v= :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> <Leader>v- :exe "resize " . (winheight(0) * 2/3)<CR>
 nnoremap <leader>i =i{
 nnoremap <leader>co ggj<S-v>G:w<space>!pbcopy<CR><CR>
-nnoremap <leader>gs :Gstatus
+nnoremap <leader>gs :Gstatus<CR>
 "Folding
 nnoremap <leader>f za
 map <Leader>j <Plug>(easymotion-j)
