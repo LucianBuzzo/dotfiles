@@ -10,5 +10,4 @@ Vim will work best with version 7.3+
 git clone https://lbuzzo@bitbucket.org/lbuzzo/vim-setup.git .dotfiles
 cd .dotfiles
 npm install -g
-sh setup.sh
 ```
