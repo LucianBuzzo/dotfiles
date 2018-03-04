@@ -4,7 +4,7 @@
   "description": "Lucian's dotfiles",
   "scripts": {
     "test": "mocha test",
-    "postinstall": "./setup.sh"
+    "postinstall": "if [ -z "$TRAVIS" ]; then echo 'Skipping setup on CI server'; else ./setup.sh; fi"
   },
   "repository": {
     "type": "git",
