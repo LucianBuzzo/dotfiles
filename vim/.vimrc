@@ -23,6 +23,10 @@ set modelines=0
 autocmd! BufWritePost,BufWinEnter * Neomake
 "let g:neomake_open_list = 2
 
+" Indent guides
+let g:indent_guides_enable_on_vim_startup = 1
+hi IndentGuidesOdd  guibg=gray ctermbg=3
+hi IndentGuidesEven guibg=gray ctermbg=4
 
 "BACKUP SETTINGS
 set nobackup
@@ -148,10 +152,10 @@ function! FocusLostWrite()
 endfunction
 autocmd FocusLost * silent! wall
 
-"set list
-"set listchars=tab:▸\
+set list
+set listchars=tab:▸\
 "set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:␣
-"hi NonText ctermfg=7 guifg=gray guibg=black
+hi NonText ctermfg=7 guifg=gray guibg=black
 
 "Windows
 nnoremap <C-h> <C-w>h
