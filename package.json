@@ -1,0 +1,24 @@
+{
+  "name": "dotfiles",
+  "version": "1.0.0",
+  "description": "Lucian's dotfiles",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucianBuzzo/dotfiles.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LucianBuzzo/dotfiles/issues"
+  },
+  "homepage": "https://github.com/LucianBuzzo/dotfiles#readme",
+  "dependencies": {
+    "decaffeinate": "^4.0.1",
+    "devtool": "^2.3.1",
+    "http-server": "^0.11.1",
+    "prettify": "^0.1.7"
+  }
+}
