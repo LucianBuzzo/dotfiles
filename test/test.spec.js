@@ -8,7 +8,7 @@ const HOME = homedir()
 const CWD = process.cwd()
 
 describe('setup.sh', () => {
-  execSync('sh setup.sh -y',  { stdio: [0, 1, 2] })
+  execSync('./setup.sh',  { stdio: [0, 1, 2] })
 
   it('should create a symlink for .vimrc in the home directory', () => {
     const linkPath = path.join(HOME, '.vimrc')
