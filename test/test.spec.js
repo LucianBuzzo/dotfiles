@@ -34,7 +34,7 @@ describe('setup.sh', () => {
     expect(!!stats && stats.isSymbolicLink()).to.be.true
 
     const linkTargetPath = fs.readlinkSync(linkPath)
-    expect(linkTargetPath).to.equal(path.join(CWD, 'vim/'))
+    expect(linkTargetPath).to.equal(path.join(CWD, 'vim'))
   })
 
   it('should create a symlink for .inputrc in the home directory', () => {
