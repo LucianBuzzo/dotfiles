@@ -7,3 +7,6 @@
 [submodule "vim/bundle/neomake"]
 	path = vim/bundle/neomake
 	url = git@github.com:neomake/neomake.git
+[submodule "vim/bundle/nerdtree"]
+	path = vim/bundle/nerdtree
+	url = git@github.com:scrooloose/nerdtree.git
