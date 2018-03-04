@@ -192,13 +192,6 @@ map <C-n> :NERDTreeToggle<CR>
 "Show hidden files (files starting with a dot)
 let NERDTreeShowHidden=1
 
-"VIM MAGIC
-augroup reload_vimrc " {
-    autocmd!
-    autocmd BufWritePost $MYVIMRC source $MYVIMRC | AirlineRefresh
-    autocmd BufWritePost $MYVIMRC AirlineRefresh
-augroup END " }
-
 "MAC Keybinds
 vmap <C-c> :w !pbcopy<CR><CR>
 
