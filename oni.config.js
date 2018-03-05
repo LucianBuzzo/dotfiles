@@ -7,7 +7,9 @@ module.exports = {
     "toolTip.background": "#eee8d5",
     "editor.hover.contents.background": "#eee8d5",
 
-    "editor.fontFamily": "Source Code Pro for Powerline",
+    "ui.fontFamily": "Droid Sans Mono for Powerline",
+
+    "editor.fontFamily": "Droid Sans Mono for Powerline",
     "editor.fontSize": 12,
     "editor.completions.enabled": true,
     "editor.formatting.formatOnSwitchToNormalMode": true,
