@@ -2,8 +2,6 @@
 
 [![Build Status](https://travis-ci.org/LucianBuzzo/dotfiles.svg?branch=master)](https://travis-ci.org/LucianBuzzo/dotfiles)
 
----
-
 What began as a way of keeping my Vim setup in one place has expanded into a
 method of keeping my personal command line and development setup in one place.
 Vim will work best with version 7.3+
