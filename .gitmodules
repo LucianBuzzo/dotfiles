@@ -1,9 +1,6 @@
 [submodule "vim/bundle/ctrlp.vim"]
 	path = vim/bundle/ctrlp.vim
 	url = https://github.com/ctrlpvim/ctrlp.vim
-[submodule "vim/bundle/vim-indent-guides"]
-	path = vim/bundle/vim-indent-guides
-	url = git@github.com:nathanaelkane/vim-indent-guides.git
 [submodule "vim/bundle/neomake"]
 	path = vim/bundle/neomake
 	url = git@github.com:neomake/neomake.git

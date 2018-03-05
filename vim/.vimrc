@@ -23,11 +23,6 @@ set modelines=0
 autocmd! BufWritePost,BufWinEnter * Neomake
 "let g:neomake_open_list = 2
 
-" Indent guides
-let g:indent_guides_enable_on_vim_startup = 1
-hi IndentGuidesOdd  guibg=gray ctermbg=3
-hi IndentGuidesEven guibg=gray ctermbg=4
-
 "BACKUP SETTINGS
 set nobackup
 set nowritebackup
@@ -156,6 +151,7 @@ set list
 set listchars=tab:▸\
 "set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:␣
 hi NonText ctermfg=7 guifg=gray guibg=black
+hi SpecialKey guibg=none guifg=#ccd6d6
 
 "Windows
 nnoremap <C-h> <C-w>h
@@ -183,11 +179,10 @@ autocmd BufRead,BufNewFile *.mdown    setlocal spell spelllang=en_gb
 "au BufRead,BufNewFile *.ect set filetype=html
 
 "Theme
-let g:solarized_termcolors=16
-let g:solarized_visibility = "high"
+"let g:solarized_termcolors=16
+let g:solarized_visibility = "low"
 let g:solarized_contrast = "high"
 colorscheme solarized
-
 set background=light
 
 "NERDTREE CONFIG
