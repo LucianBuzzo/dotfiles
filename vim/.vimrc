@@ -129,7 +129,7 @@ command! -bang WQ wq<bang>
 
 nnoremap <tab> %
 vnoremap <tab> %
-vnoremap : :B<space>
+"vnoremap : :B<space>
 
 nnoremap j gj
 nnoremap k gk
@@ -147,11 +147,11 @@ function! FocusLostWrite()
 endfunction
 autocmd FocusLost * silent! wall
 
-set list
-set listchars=tab:▸\
+"set list
+"set listchars=tab:▸\
 "set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:␣
-hi NonText ctermfg=7 guifg=gray guibg=black
-hi SpecialKey guibg=none guifg=#ccd6d6
+"hi NonText ctermfg=7 guifg=gray guibg=black
+"hi SpecialKey guibg=none guifg=red
 
 "Windows
 nnoremap <C-h> <C-w>h
@@ -180,10 +180,10 @@ autocmd BufRead,BufNewFile *.mdown    setlocal spell spelllang=en_gb
 
 "Theme
 "let g:solarized_termcolors=16
-let g:solarized_visibility = "low"
-let g:solarized_contrast = "high"
-colorscheme solarized
-set background=light
+" let g:solarized_visibility = "low"
+" let g:solarized_contrast = "high"
+" colorscheme solarized
+" set background=light
 
 "NERDTREE CONFIG
 "map <C-n> to open nerdtree file viewer
@@ -329,3 +329,11 @@ function! HLNextMovedTrigger ()
     call HLNext()
 endfunction
 
+
+"====[ Syntastic ]============================================
+function! StrTrim(txt)
+  return substitute(a:txt, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+endfunction
+
+let g:syntastic_typescript_checkers = ['tslint']
+let g:syntastic_javascript_checkers = ['eslint']

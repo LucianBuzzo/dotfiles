@@ -4,8 +4,11 @@ module.exports = {
 
     "colors.background": "#eee8d5",
     "colors.title.background": "#eee8d5",
-    "toolTip.background": "#eee8d5",
-    "editor.hover.contents.background": "#eee8d5",
+    "colors.toolTip.background": "#eee8d5",
+    "colors.editor.hover.contents.background": "#eee8d5",
+    "colors.editor.hover.title.background": "#eee8d5",
+    "colors.editor.hover.codeblock.foreground": "#eee8d5",
+    "colors.editor.hover.codeblock.background": "#eee8d5",
 
     "ui.fontFamily": "Droid Sans Mono for Powerline",
 
