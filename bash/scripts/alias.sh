@@ -10,6 +10,9 @@ alias uistart='cd ~/projects/resin-ui && API_HOST=api.resinstaging.io npm start'
 alias diary='cd ~/journal && vim `date +"%Y-%m-%d"`.markdown'
 alias stagingCommit='curl -s https://dashboard.resinstaging.io | grep COMMIT'
 
+alias assignment-start='docker build -t smart-lighting-dashboard . && docker run -p 8000:8000 smart-lighting-dashboard'
+alias assignment-stop='docker rmi smart-lighting-dashboard --force'
+
 # If we're running on the local machine grab Brew installed vim, otherwise find
 # out where vim is installed and run that instead
 function vim {

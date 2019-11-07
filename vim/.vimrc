@@ -83,7 +83,7 @@ set guioptions-=R
 set guioptions-=L
 "Font
 "set guifont=droid\ sans\ mono\ for\ powerline:h12
-set guifont=Sauce\ Code\ Powerline:h16
+set guifont=Sauce\ Code\ Powerline:h18
 
 set ignorecase
 set smartcase
@@ -172,6 +172,9 @@ autocmd BufRead,BufNewFile *.md       setlocal spell spelllang=en_gb
 autocmd BufRead,BufNewFile *.markdown setlocal spell spelllang=en_gb
 autocmd BufRead,BufNewFile *.mdown    setlocal spell spelllang=en_gb
 
+"SVELTE CONFIG
+au BufRead,BufNewFile *.svelte set filetype=html
+
 "SYNTAX HIGHLIGHTING
 "au FileType javascript call JavaScriptFold()
 
@@ -207,6 +210,7 @@ endfu
 "CTRL P setup
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 
 "EASYMOTION
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
@@ -329,11 +333,66 @@ function! HLNextMovedTrigger ()
     call HLNext()
 endfunction
 
+" Source vimrc
+nnoremap <Leader>sv :source $MYVIMRC<cr>
 
 "====[ Syntastic ]============================================
+" return full path with the trailing slash
+"  or an empty string if we're not in an npm project
+fun! s:GetNodeModulesAbsPath ()
+  let lcd_saved = fnameescape(getcwd())
+  silent! exec "lcd" expand('%:p:h')
+  let path = finddir('node_modules', '.;')
+  exec "lcd" lcd_saved
+
+  " fnamemodify will return full path with trailing slash;
+  " if no node_modules found, we're safe
+  return path is '' ? '' : fnamemodify(path, ':p')
+endfun
+
+" return full path of local eslint executable
+"  or an empty string if no executable found
+fun! s:GetEslintExec (node_modules)
+  let eslint_guess = a:node_modules is '' ? '' : a:node_modules . '.bin/eslint'
+  return exepath(eslint_guess)
+endfun
+
+" if eslint_exec found successfully, set it for the current buffer
+fun! s:LetEslintExec (eslint_exec)
+  if a:eslint_exec isnot ''
+    let b:syntastic_javascript_eslint_exec = a:eslint_exec
+  endif
+endfun
+
+function! SetEslintExecutable ()
+  let node_modules = s:GetNodeModulesAbsPath()
+  let eslint_exec = s:GetEslintExec(node_modules)
+  call s:LetEslintExec(eslint_exec)
+endfunction
+
 function! StrTrim(txt)
   return substitute(a:txt, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
 endfunction
 
+function! g:SetJSChecker()
+    call SetEslintExecutable()
+
+    for name in [ '.eslintrc', '.eslintrc.yml', '.eslintrc.json' ]
+        let file = findfile(name, '.;')
+        if len(file) > 0
+            let b:syntastic_checkers = ['eslint']
+            return
+        endif
+    endfor
+
+    let b:syntastic_checkers = ['standard']
+endfunction
+
+let g:syntastic_ignore_files = ['.*\.html']
+
 let g:syntastic_typescript_checkers = ['tslint']
-let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_checkers = [ 'eslint' ]
+autocmd BufWritePost,BufWinEnter *.js call SetJSChecker()
+autocmd BufWritePost,BufWinEnter *.jsx call SetJSChecker()
+"autocmd FileType javascript let b:syntastic_checkers = findfile('.eslintrc.yml', '.;') != '' ? ['eslint'] : ['standard']
+

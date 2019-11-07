@@ -13,7 +13,7 @@ module.exports = {
     "ui.fontFamily": "Droid Sans Mono for Powerline",
 
     "editor.fontFamily": "Droid Sans Mono for Powerline",
-    "editor.fontSize": 12,
+    "editor.fontSize": 16,
     "editor.completions.enabled": true,
     "editor.formatting.formatOnSwitchToNormalMode": true,
     "autoClosingPairs.enabled": false,

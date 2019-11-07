@@ -54,3 +54,15 @@ function enterdockercontainer() {
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export PATH="$HOME/.cargo/bin:$PATH"
+
+function npm-which() {
+    npm_bin=$(npm bin)
+    bin_name=$1
+    local_path="${npm_bin}/${bin_name}"
+
+    [[ -f $local_path ]] && echo "$local_path" && return
+
+    which "$bin_name"
+}
