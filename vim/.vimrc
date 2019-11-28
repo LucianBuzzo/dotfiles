@@ -401,6 +401,10 @@ set autoread
 
 " autofix with eslint
 let g:syntastic_javascript_eslint_args = ['--fix']
+
+" autofix with standard js
+let g:syntastic_javascript_standard_args = ['--fix']
+
 function! SyntasticCheckHook(errors)
   checktime
 endfunction
