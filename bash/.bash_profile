@@ -16,6 +16,9 @@ if [ -f ~/.git-completion.bash ]; then
   . ~/.git-completion.bash
 fi
 
+# Load tmuxinator
+source ~/.bin/tmuxinator.bash
+
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && dirname $(readlink .bash_profile) )
 
 FILES="$DIR"/scripts/*.sh
@@ -34,6 +37,9 @@ function cs-to-ts() {
   code -r $(echo $1 | sed 's/\.coffee/\.ts/')
   git add $(echo $1 | sed 's/\.coffee/\.ts/')
 }
+
+# Set Editor to vim
+export EDITOR='vim'
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
