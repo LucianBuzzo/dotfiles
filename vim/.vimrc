@@ -396,13 +396,13 @@ autocmd BufWritePost,BufWinEnter *.js call SetJSChecker()
 autocmd BufWritePost,BufWinEnter *.jsx call SetJSChecker()
 "autocmd FileType javascript let b:syntastic_checkers = findfile('.eslintrc.yml', '.;') != '' ? ['eslint'] : ['standard']
 
-"Auto fix eslint errors after writing
+" Autofix javascript errors after writing
 set autoread
 
-" autofix with eslint
+" with eslint
 let g:syntastic_javascript_eslint_args = ['--fix']
 
-" autofix with standard js
+" with standard js
 let g:syntastic_javascript_standard_args = ['--fix']
 
 function! SyntasticCheckHook(errors)
