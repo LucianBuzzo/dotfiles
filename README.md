@@ -9,7 +9,7 @@ Vim will work best with version 7.3+
 ### Installation
 
 ```
-git clone --recursive https://lbuzzo@bitbucket.org/lbuzzo/vim-setup.git .dotfiles
+git clone --recursive git@github.com:LucianBuzzo/dotfiles.git .dotfiles
 cd .dotfiles
 npm install -g
 ```
