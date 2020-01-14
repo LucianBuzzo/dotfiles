@@ -23,6 +23,9 @@ set modelines=0
 autocmd! BufWritePost,BufWinEnter * Neomake
 "let g:neomake_open_list = 2
 
+" Mouse support
+set mouse=a
+
 "BACKUP SETTINGS
 set nobackup
 set nowritebackup
@@ -83,7 +86,7 @@ set guioptions-=R
 set guioptions-=L
 "Font
 "set guifont=droid\ sans\ mono\ for\ powerline:h12
-set guifont=Sauce\ Code\ Powerline:h18
+set guifont=Ubuntu\ Mono\ 16
 
 set ignorecase
 set smartcase
@@ -182,11 +185,11 @@ au BufRead,BufNewFile *.svelte set filetype=html
 "au BufRead,BufNewFile *.ect set filetype=html
 
 "Theme
-"let g:solarized_termcolors=16
-" let g:solarized_visibility = "low"
-" let g:solarized_contrast = "high"
-" colorscheme solarized
-" set background=light
+"set t_Co=256
+let g:solarized_visibility = "low"
+let g:solarized_contrast = "high"
+colorscheme solarized
+set background=light
 
 "NERDTREE CONFIG
 "map <C-n> to open nerdtree file viewer
@@ -211,6 +214,13 @@ endfu
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
+
+"Fugitive
+nmap <leader>gs :Gstatus<cr>
+nmap <leader>gc :Gcommit<cr>
+nmap <leader>ga :Gwrite<cr>
+nmap <leader>gl :Glog<cr>
+nmap <leader>gd :Gdiff<cr>
 
 "EASYMOTION
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
