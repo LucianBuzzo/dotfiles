@@ -9,6 +9,7 @@ alias generatepass='date | md5 | cut -c1-16'
 alias uistart='cd ~/projects/resin-ui && API_HOST=api.resinstaging.io npm start'
 alias diary='cd ~/journal && vim `date +"%Y-%m-%d"`.markdown'
 alias stagingCommit='curl -s https://dashboard.resinstaging.io | grep COMMIT'
+alias dcup='docker-compose up --build'
 
 alias assignment-start='docker build -t smart-lighting-dashboard . && docker run -p 8000:8000 smart-lighting-dashboard'
 alias assignment-stop='docker rmi smart-lighting-dashboard --force'

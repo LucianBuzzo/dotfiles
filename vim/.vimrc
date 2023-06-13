@@ -32,11 +32,6 @@ set nowritebackup
 set noswapfile
 set noundofile
 
-" REMOVE WHITESPACE ON SAVE
-":autocmd BufWritePost * :StripWhitespace
-let blacklist = ['md', 'markdown', 'mdown']
-:autocmd BufWritePost * if index(blacklist, &ft) < 0 | :StripWhitespace
-
 "SAVE
 inoremap <c-s> <ESC>:w<CR>
 nnoremap <c-s> <ESC>:w<CR>
@@ -186,10 +181,10 @@ au BufRead,BufNewFile *.svelte set filetype=html
 
 "Theme
 "set t_Co=256
-let g:solarized_visibility = "low"
-let g:solarized_contrast = "high"
-colorscheme solarized
-set background=light
+"@let g:solarized_visibility = "low"
+"@let g:solarized_contrast = "high"
+"@colorscheme solarized
+"@set background=light
 
 "NERDTREE CONFIG
 "map <C-n> to open nerdtree file viewer
