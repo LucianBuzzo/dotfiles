@@ -31,24 +31,8 @@ do
   . "$f"
 done
 
-function cs-to-ts() {
-  decaffeinate $1
-  mv $(echo $1 | sed 's/\.coffee/\.js/') $(echo $1 | sed 's/\.coffee/\.ts/')
-  git rm $1
-  npm run prettify
-  code -r $(echo $1 | sed 's/\.coffee/\.ts/')
-  git add $(echo $1 | sed 's/\.coffee/\.ts/')
-}
-
 # Set Editor to vim
 export EDITOR='vim'
-
-### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
-
-### Added by the Heroku Toolbelt
-export PATH="~/.composer/vendor/bin:$PATH"
-
 export PATH="$HOME/.yarn/bin:$PATH"
 
 function rununtilfail() {
@@ -169,3 +153,4 @@ merge_renovate_branches() {
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
+export_npm_token
