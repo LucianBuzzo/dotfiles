@@ -41,3 +41,8 @@ function findfilename {
   find $PWD | grep "$@"
 }
 
+# Check if ggrep (GNU grep) is installed
+if command -v ggrep >/dev/null 2>&1; then
+    alias grep='ggrep'
+fi
+
