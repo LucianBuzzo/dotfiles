@@ -153,4 +153,9 @@ merge_renovate_branches() {
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
+
 export_npm_token
+
+# SSL cert env vars used for local development of cerebrum frontend clients
+export CEREBRUM_SSL_CERT=/Users/lucianbuzzo/cerebrum-local-ssl-certs/_wildcard.cerebrum.com.pem
+export CEREBRUM_SSL_KEY=/Users/lucianbuzzo/cerebrum-local-ssl-certs/_wildcard.cerebrum.com-key.pem
