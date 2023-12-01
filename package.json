@@ -17,9 +17,9 @@
   },
   "homepage": "https://github.com/LucianBuzzo/dotfiles#readme",
   "dependencies": {
-    "decaffeinate": "^4.0.1",
+    "decaffeinate": "^5.1.1",
     "devtool": "^2.3.1",
-    "http-server": "^0.11.1",
+    "http-server": "^0.12.2",
     "prettify": "^0.1.7"
   },
   "devDependencies": {
