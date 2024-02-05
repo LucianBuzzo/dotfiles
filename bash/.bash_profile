@@ -161,11 +161,15 @@ export PATH=$PATH:/Applications/factor
 export_npm_token
 
 # SSL cert env vars used for local development of cerebrum frontend clients
-export CEREBRUM_SSL_CERT=/Users/lucianbuzzo/cerebrum-local-ssl-certs/_wildcard.cerebrum.com.pem
-export CEREBRUM_SSL_KEY=/Users/lucianbuzzo/cerebrum-local-ssl-certs/_wildcard.cerebrum.com-key.pem
-. "$HOME/.cargo/env"
+export CEREBRUM_SSL_CERT=~/cerebrum-local-ssl-certs/_wildcard.cerebrum.com.pem
+export CEREBRUM_SSL_KEY=~/cerebrum-local-ssl-certs/_wildcard.cerebrum.com-key.pem
 
 HISTSIZE=10000
 HISTFILESIZE=20000
 
+# Rust
+. "$HOME/.cargo/env"
+
+# Python
+eval "$(pyenv init -)"
 alias python='python3'

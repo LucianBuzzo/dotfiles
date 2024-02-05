@@ -41,8 +41,7 @@ function findfilename {
   find $PWD | grep "$@"
 }
 
-# Check if ggrep (GNU grep) is installed
-if command -v ggrep >/dev/null 2>&1; then
-    alias grep='ggrep'
-fi
+# Alias grep to ggrep (GNU grep)£
+# OSX uses an older version of BSD grep by default, so you need to use `brew install grep` to get the GNU version
+alias grep='ggrep'
 
