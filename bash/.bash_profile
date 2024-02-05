@@ -21,6 +21,8 @@ if [ -f ~/.git-completion.bash ]; then
   . ~/.git-completion.bash
 fi
 
+alias grep=ggrep
+
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && dirname $(readlink .bash_profile) )
 
 FILES="$DIR"/scripts/*.sh
@@ -47,7 +49,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-export PATH="$HOME/.cargo/bin:$PATH"
 
 # PIP
 export PATH="$HOME/Library/Python/3.9/bin:$PATH"
@@ -154,8 +155,17 @@ export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
+# factor lang
+export PATH=$PATH:/Applications/factor
+
 export_npm_token
 
 # SSL cert env vars used for local development of cerebrum frontend clients
 export CEREBRUM_SSL_CERT=/Users/lucianbuzzo/cerebrum-local-ssl-certs/_wildcard.cerebrum.com.pem
 export CEREBRUM_SSL_KEY=/Users/lucianbuzzo/cerebrum-local-ssl-certs/_wildcard.cerebrum.com-key.pem
+. "$HOME/.cargo/env"
+
+HISTSIZE=10000
+HISTFILESIZE=20000
+
+alias python='python3'
