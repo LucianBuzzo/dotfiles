@@ -49,6 +49,9 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+function listening() {
+  sudo lsof -iTCP -sTCP:LISTEN -n -P
+}
 
 # PIP
 export PATH="$HOME/Library/Python/3.9/bin:$PATH"
@@ -173,3 +176,28 @@ HISTFILESIZE=20000
 # Python
 eval "$(pyenv init -)"
 alias python='python3'
+
+# .local path
+export PATH=$PATH:$HOME/.local/bin/
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH=$BUN_INSTALL/bin:$PATH
+
+. "$HOME/.local/bin/env"
+
+whos_on_port() {
+  if [ $# -eq 0 ]; then
+    echo "Usage: whos_on_port <port1> [port2 ...]"
+    return 1
+  fi
+
+  for port in "$@"; do
+    echo "=== Port $port ==="
+    # Fields:
+    # COMMAND | PID | USER | FD | TYPE | DEVICE | SIZE/OFF | NODE | NAME
+    sudo lsof -nP -iTCP:$port -sTCP:LISTEN 2>/dev/null \
+      | awk 'NR==1 || NR>1 {printf "%-20s %-10s %-10s %-6s %s\n", $1, $2, $3, $4, $9}'
+    echo
+  done
+}

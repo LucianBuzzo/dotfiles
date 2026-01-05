@@ -76,6 +76,6 @@ sops_encrypt() {
     kms_arn="${new_kms_arn}"
   fi
 
-  sops -e --kms "${kms_arn}" --encrypted-regex '^(data|stringData)$' "${decrypted_file}" > "${encrypted_file}"
+  sops -e --kms "${kms_arn}" --encrypted-regex '^(data|stringData|secrets)$' "${decrypted_file}" > "${encrypted_file}"
   echo "Encrypted '${decrypted_file}' to '${encrypted_file}' using KMS ARN '${kms_arn}'"
 }

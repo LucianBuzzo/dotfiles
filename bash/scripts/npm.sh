@@ -16,7 +16,7 @@ function export_npm_token() {
       token=$(grep -oP '(?<=//registry.npmjs.org/:_authToken=)\S+' ~/.npmrc)
       if [[ -n "$token" ]]; then
           export NPM_TOKEN=$token
-          export CEREBRUM_TOKEN=$token
+          export CEREBRUM_NPM_TOKEN=$token
           echo "NPM_TOKEN exported successfully."
       else
           echo "Could not find a token in the .npmrc file."
