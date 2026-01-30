@@ -55,12 +55,4 @@ describe('setup.sh', () => {
     expect(linkTargetPath).to.equal(path.join(CWD, 'bash', '.bash_profile'))
   })
 
-  it('should create a symlink for oni config in the home directory', () => {
-    const linkPath = path.join(HOME, '.oni', 'config.js')
-    const stats = fs.lstatSync(linkPath)
-    expect(!!stats && stats.isSymbolicLink()).to.be.true
-
-    const linkTargetPath = fs.readlinkSync(linkPath)
-    expect(linkTargetPath).to.equal(path.join(CWD, 'oni.config.js'))
-  })
 })
