@@ -73,15 +73,13 @@ directory-stack powered `cd` replacement.
 | `sops_encrypt` | Encrypt a YAML file into `sops.*.yml`. |
 | `rununtilfail` | Run a command in a loop until it fails. |
 | `enterdockercontainer` | `docker exec -it ... bash`. |
-| `listening` | List listening TCP ports (sudo). |
+| `ports` | List listening TCP ports; pass ports to filter (sudo). |
 | `ecr_docker_login` | Login to ECR (us-east-1, fixed registry). |
 | `mfa_aws_login` | MFA login and AWS profile setup for cerebrum token. |
 | `merge_renovate_branches` | Merge all renovate/dependabot branches and push. |
-| `what_ports` | List ports with process and PID info (sudo). |
 | `gcm` | AI‑assisted git commit message workflow. |
 | `docker_publish_ecr` | Build, tag, and push a Docker image to ECR. |
 | `python` | Alias to `python3`. |
-| `whos_on_port` | Show listeners for specific ports (sudo). |
 
 ### Repo layout
 

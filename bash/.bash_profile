@@ -588,8 +588,20 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
-function listening() {
-  sudo lsof -iTCP -sTCP:LISTEN -n -P
+ports() {
+  if [ $# -eq 0 ]; then
+    # Show all listening ports with a compact table.
+    sudo lsof -nP -iTCP -sTCP:LISTEN 2>/dev/null \
+      | awk 'NR==1 {printf "%-20s %-10s %-10s %-6s %s\n", $1, $2, $3, $4, $9} NR>1 {printf "%-20s %-10s %-10s %-6s %s\n", $1, $2, $3, $4, $9}'
+    return 0
+  fi
+
+  for port in "$@"; do
+    echo "=== Port $port ==="
+    sudo lsof -nP -iTCP:$port -sTCP:LISTEN 2>/dev/null \
+      | awk 'NR==1 {printf "%-20s %-10s %-10s %-6s %s\n", $1, $2, $3, $4, $9} NR>1 {printf "%-20s %-10s %-10s %-6s %s\n", $1, $2, $3, $4, $9}'
+    echo
+  done
 }
 
 # PIP
@@ -678,9 +690,6 @@ merge_renovate_branches() {
   echo "All 'renovate' and 'dependabot' branches merged into '$new_branch_name' and pushed to the remote repository."
 }
 
-function what_ports() {
-  sudo lsof -iTCP -sTCP:LISTEN -n -P | awk 'NR>1 {print $9, $1, $2}' | sed 's/.*://' | while read port process pid; do echo "Port $port: $(ps -p $pid -o command= | sed 's/^-//') (PID: $pid)"; done | sort -n
-}
 
 # -----------------------------------------------------------------------------
 # AI-powered Git Commit Function
@@ -809,21 +818,6 @@ export PATH=$BUN_INSTALL/bin:$PATH
 
 . "$HOME/.local/bin/env"
 
-whos_on_port() {
-  if [ $# -eq 0 ]; then
-    echo "Usage: whos_on_port <port1> [port2 ...]"
-    return 1
-  fi
-
-  for port in "$@"; do
-    echo "=== Port $port ==="
-    # Fields:
-    # COMMAND | PID | USER | FD | TYPE | DEVICE | SIZE/OFF | NODE | NAME
-    sudo lsof -nP -iTCP:$port -sTCP:LISTEN 2>/dev/null \
-      | awk 'NR==1 || NR>1 {printf "%-20s %-10s %-10s %-6s %s\n", $1, $2, $3, $4, $9}'
-    echo
-  done
-}
 
 eval "$(direnv hook bash)"
 
