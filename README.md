@@ -13,3 +13,9 @@ git clone --recursive git@github.com:LucianBuzzo/dotfiles.git .dotfiles
 cd .dotfiles
 npm install -g
 ```
+
+### VS Code
+
+```
+./vscode/install.sh
+```
