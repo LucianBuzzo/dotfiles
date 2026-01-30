@@ -66,7 +66,11 @@ function findin {
 
 # Recursive search for file name
 function findfilename {
-  find $PWD | grep "$@"
+  if [ -z "$1" ]; then
+    echo "Usage: findfilename <pattern>"
+    return 1
+  fi
+  find . -iname "*$1*"
 }
 
 ###############################################################################
