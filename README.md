@@ -1,6 +1,6 @@
 ## Lucian's dotfiles
 
-[![Build Status](https://travis-ci.org/LucianBuzzo/dotfiles.svg?branch=master)](https://travis-ci.org/LucianBuzzo/dotfiles)
+[![CI](https://github.com/LucianBuzzo/dotfiles/actions/workflows/ci.yml/badge.svg)](https://github.com/LucianBuzzo/dotfiles/actions/workflows/ci.yml)
 
 What began as a way of keeping my Vim setup in one place has expanded into a
 method of keeping my personal command line and development setup in one place.
