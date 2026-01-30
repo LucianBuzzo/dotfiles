@@ -26,6 +26,12 @@ cd .dotfiles
 ./setup.sh
 ```
 
+Dry run (no writes):
+
+```bash
+./setup.sh --dry-run
+```
+
 ### VS Code
 
 ```bash

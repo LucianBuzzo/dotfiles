@@ -7,6 +7,7 @@ HOME_DIR="$HOME"
 YES=0
 FORCE=0
 NON_INTERACTIVE=0
+DRY_RUN=0
 
 usage() {
   cat <<'USAGE'
@@ -16,6 +17,7 @@ Options:
   -y, --yes              Accept defaults and skip prompts where possible.
   -f, --force            Overwrite existing files by backing them up first.
   -n, --non-interactive  Never prompt (implies skipping optional inputs).
+  -d, --dry-run          Show what would change without writing.
   -h, --help             Show this help.
 USAGE
 }
@@ -31,6 +33,9 @@ while [ $# -gt 0 ]; do
       ;;
     -n|--non-interactive)
       NON_INTERACTIVE=1
+      ;;
+    -d|--dry-run)
+      DRY_RUN=1
       ;;
     -h|--help)
       usage
@@ -85,6 +90,14 @@ backup_path() {
   echo "${path}.bak.${stamp}"
 }
 
+dry() {
+  if [ "$DRY_RUN" -eq 1 ]; then
+    info "[dry-run] $1"
+    return 0
+  fi
+  return 1
+}
+
 link_path() {
   local origin="$1"
   local dest="$2"
@@ -104,8 +117,12 @@ link_path() {
     if [ "$FORCE" -eq 1 ] || confirm "Overwrite $(basename "$dest")?"; then
       local backup
       backup="$(backup_path "$dest")"
-      mv "$dest" "$backup"
-      info "Backed up to $backup"
+      if dry "Would back up $dest to $backup"; then
+        :
+      else
+        mv "$dest" "$backup"
+        info "Backed up to $backup"
+      fi
     else
       warn "Skipped: $dest"
       return 0
@@ -113,15 +130,23 @@ link_path() {
   fi
 
   mkdir -p "$(dirname "$dest")"
-  ln -s "$origin_path" "$dest"
-  success "Linked $dest"
+  if dry "Would link $origin_path -> $dest"; then
+    :
+  else
+    ln -s "$origin_path" "$dest"
+    success "Linked $dest"
+  fi
 }
 
 ensure_dir() {
   local dir="$1"
   if [ ! -d "$dir" ]; then
-    mkdir -p "$dir"
-    success "Created $dir"
+    if dry "Would create $dir"; then
+      :
+    else
+      mkdir -p "$dir"
+      success "Created $dir"
+    fi
   else
     info "Exists: $dir"
   fi
@@ -131,8 +156,12 @@ ensure_git_config() {
   local key="$1"
   local value="$2"
   if ! git config --global --get "$key" >/dev/null 2>&1; then
-    git config --global "$key" "$value"
-    success "Set git $key"
+    if dry "Would set git $key to \"$value\""; then
+      :
+    else
+      git config --global "$key" "$value"
+      success "Set git $key"
+    fi
   else
     info "Git $key already set"
   fi
@@ -154,7 +183,11 @@ setup_vim() {
 setup_vscode() {
   info "VS Code: linking settings and extensions"
   if [ -x "$ROOT_DIR/vscode/install.sh" ]; then
-    "$ROOT_DIR/vscode/install.sh"
+    if [ "$DRY_RUN" -eq 1 ]; then
+      info "[dry-run] Would run vscode/install.sh"
+    else
+      "$ROOT_DIR/vscode/install.sh"
+    fi
   else
     warn "VS Code installer not found, skipping"
   fi
@@ -172,13 +205,21 @@ setup_git() {
 
   if ! git config --global --get user.name >/dev/null 2>&1; then
     if [ -n "${GIT_NAME:-}" ]; then
-      git config --global user.name "$GIT_NAME"
-      success "Set git user.name from GIT_NAME"
+      if dry "Would set git user.name from GIT_NAME"; then
+        :
+      else
+        git config --global user.name "$GIT_NAME"
+        success "Set git user.name from GIT_NAME"
+      fi
     elif [ "$NON_INTERACTIVE" -eq 0 ]; then
       read -r -p "Git user.name (leave blank to skip): " name
       if [ -n "$name" ]; then
-        git config --global user.name "$name"
-        success "Set git user.name"
+        if dry "Would set git user.name to \"$name\""; then
+          :
+        else
+          git config --global user.name "$name"
+          success "Set git user.name"
+        fi
       fi
     else
       warn "Git user.name not set"
@@ -187,13 +228,21 @@ setup_git() {
 
   if ! git config --global --get user.email >/dev/null 2>&1; then
     if [ -n "${GIT_EMAIL:-}" ]; then
-      git config --global user.email "$GIT_EMAIL"
-      success "Set git user.email from GIT_EMAIL"
+      if dry "Would set git user.email from GIT_EMAIL"; then
+        :
+      else
+        git config --global user.email "$GIT_EMAIL"
+        success "Set git user.email from GIT_EMAIL"
+      fi
     elif [ "$NON_INTERACTIVE" -eq 0 ]; then
       read -r -p "Git user.email (leave blank to skip): " email
       if [ -n "$email" ]; then
-        git config --global user.email "$email"
-        success "Set git user.email"
+        if dry "Would set git user.email to \"$email\""; then
+          :
+        else
+          git config --global user.email "$email"
+          success "Set git user.email"
+        fi
       fi
     else
       warn "Git user.email not set"
