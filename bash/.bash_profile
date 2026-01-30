@@ -617,8 +617,8 @@ function enterdockercontainer() {
 }
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 function listening() {
   sudo lsof -iTCP -sTCP:LISTEN -n -P
@@ -630,10 +630,6 @@ export PATH="$HOME/Library/Python/3.9/bin:$PATH"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 export GPG_TTY=$(tty)
-
-export NVM_DIR="$HOME/.nvm"
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 function ecr_docker_login() {
   aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 640539939441.dkr.ecr.us-east-1.amazonaws.com
@@ -837,7 +833,6 @@ HISTFILESIZE=20000
 . "$HOME/.cargo/env"
 
 # Python
-eval "$(pyenv init -)"
 alias python='python3'
 
 # .local path
@@ -871,22 +866,6 @@ eval "$(direnv hook bash)"
 export PATH=$PATH:$HOME/.deno/bin/
 
 export HUSKY=0
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/lucianbuzzo/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/lucianbuzzo/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/lucianbuzzo/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/lucianbuzzo/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/lucianbuzzo/.lmstudio/bin"
