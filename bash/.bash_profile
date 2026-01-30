@@ -473,7 +473,10 @@ function get_prompt {
   p="${c}38;5;136\]"
 
   face='\[\033[38;5;240m\]ಠ_ಠ\[\e[m\]\[\033[38;5;125m\] (\@)\[\em\]\[\e[m\] \[\033[38;5;37m\]\W'
-  git_part="$(__git_ps1 ' \[\033[38;5;64m\](%s)\[\033[m\]')"
+  local git_part=""
+  if declare -F __git_ps1 >/dev/null 2>&1; then
+    git_part="$(__git_ps1 ' \[\033[38;5;64m\](%s)\[\033[m\]')"
+  fi
 
   n="${c}m]"
   echo -e "${face}${git_part} "
