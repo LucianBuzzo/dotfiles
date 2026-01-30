@@ -800,9 +800,6 @@ HISTFILESIZE=20000
 # Python
 alias python='python3'
 
-# .local path
-export PATH=$PATH:$HOME/.local/bin/
-
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH=$BUN_INSTALL/bin:$PATH
