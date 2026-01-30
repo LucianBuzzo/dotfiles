@@ -53,13 +53,9 @@ function vim {
   # Save and then restore terminal settings
   local STTYOPTS="$(stty -g)"
   stty stop '' -ixoff
-  if [[ "$OSTYPE" == 'linux-gnu' ]]; then
-    local VIM=`which vim`
-     $VIM "$@"
-  else
-    local VIM=`which vim`
-     $VIM "$@"
-  fi
+  local VIM
+  VIM="$(command -v vim)"
+  "$VIM" "$@"
   stty "$STTYOPTS"
 }
 
