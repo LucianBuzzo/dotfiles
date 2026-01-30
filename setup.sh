@@ -1,46 +1,218 @@
-#! /bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-HOME=$( cd ~ && pwd )
-ARG=$1
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+HOME_DIR="$HOME"
 
-link_file() {
+YES=0
+FORCE=0
+NON_INTERACTIVE=0
+
+usage() {
+  cat <<'USAGE'
+Usage: ./setup.sh [options]
+
+Options:
+  -y, --yes              Accept defaults and skip prompts where possible.
+  -f, --force            Overwrite existing files by backing them up first.
+  -n, --non-interactive  Never prompt (implies skipping optional inputs).
+  -h, --help             Show this help.
+USAGE
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -y|--yes)
+      YES=1
+      NON_INTERACTIVE=1
+      ;;
+    -f|--force)
+      FORCE=1
+      ;;
+    -n|--non-interactive)
+      NON_INTERACTIVE=1
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1"
+      usage
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+is_macos() {
+  [ "$(uname -s)" = "Darwin" ]
+}
+
+is_linux() {
+  [ "$(uname -s)" = "Linux" ]
+}
+
+info() {
+  printf "\033[38;5;240m%s\033[0m\n" "$1"
+}
+
+success() {
+  printf "\033[38;5;64m%s\033[0m\n" "$1"
+}
+
+warn() {
+  printf "\033[38;5;214m%s\033[0m\n" "$1"
+}
+
+confirm() {
+  if [ "$YES" -eq 1 ] || [ "$NON_INTERACTIVE" -eq 1 ]; then
+    return 0
+  fi
+  local prompt="$1"
+  local reply
+  read -r -p "$prompt [y/N] " reply
+  case "$reply" in
+    y|Y|yes|YES) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+backup_path() {
+  local path="$1"
+  local stamp
+  stamp="$(date +%Y%m%d%H%M%S)"
+  echo "${path}.bak.${stamp}"
+}
+
+link_path() {
   local origin="$1"
   local dest="$2"
-  local dialogue="\033[38;5;240mSymlinking ${DIR}/${origin} to ${dest}.\n"
+  local origin_path="$ROOT_DIR/$origin"
 
-  if [ ! -e "$dest" ]; then
-    printf "$dialogue"
-    ln -s "$DIR"/"$origin" "$dest"
-  else
-    if [ "$ARG" = "-y" ]; then
-      printf "$dialogue"
-      ln -sf "$DIR"/"$origin" "$dest"
+  if [ ! -e "$origin_path" ]; then
+    warn "Missing source: $origin_path (skipping)"
+    return 1
+  fi
+
+  if [ -e "$dest" ] || [ -L "$dest" ]; then
+    if [ "$dest" -ef "$origin_path" ]; then
+      info "Already linked: $dest"
+      return 0
+    fi
+
+    if [ "$FORCE" -eq 1 ] || confirm "Overwrite $(basename "$dest")?"; then
+      local backup
+      backup="$(backup_path "$dest")"
+      mv "$dest" "$backup"
+      info "Backed up to $backup"
     else
-      printf "\033[38;5;160mA $(basename $dest) file already exists in your home directory.\n"
-      printf "\033[38;5;240mOverwriting it with a symlink to ${dest}?\n"
-      printf "$dialogue"
-      ln -sf "$DIR"/"$origin" "$dest";
+      warn "Skipped: $dest"
+      return 0
+    fi
+  fi
+
+  mkdir -p "$(dirname "$dest")"
+  ln -s "$origin_path" "$dest"
+  success "Linked $dest"
+}
+
+ensure_dir() {
+  local dir="$1"
+  if [ ! -d "$dir" ]; then
+    mkdir -p "$dir"
+    success "Created $dir"
+  else
+    info "Exists: $dir"
+  fi
+}
+
+ensure_git_config() {
+  local key="$1"
+  local value="$2"
+  if ! git config --global --get "$key" >/dev/null 2>&1; then
+    git config --global "$key" "$value"
+    success "Set git $key"
+  else
+    info "Git $key already set"
+  fi
+}
+
+setup_bash() {
+  info "Bash: linking profile and input settings"
+  link_path "bash/.bash_profile" "$HOME_DIR/.bash_profile"
+  link_path ".inputrc" "$HOME_DIR/.inputrc"
+}
+
+setup_vim() {
+  info "Vim: linking configs"
+  link_path "vim/.vimrc" "$HOME_DIR/.vimrc"
+  ensure_dir "$HOME_DIR/.vimbackups"
+  link_path "vim" "$HOME_DIR/.config/nvim"
+}
+
+setup_vscode() {
+  info "VS Code: linking settings and extensions"
+  if [ -x "$ROOT_DIR/vscode/install.sh" ]; then
+    "$ROOT_DIR/vscode/install.sh"
+  else
+    warn "VS Code installer not found, skipping"
+  fi
+}
+
+setup_git() {
+  if ! command -v git >/dev/null 2>&1; then
+    warn "Git not found, skipping git config"
+    return 0
+  fi
+
+  info "Git: configuring defaults"
+  ensure_git_config "core.editor" "vim"
+  ensure_git_config "init.defaultBranch" "main"
+
+  if ! git config --global --get user.name >/dev/null 2>&1; then
+    if [ -n "${GIT_NAME:-}" ]; then
+      git config --global user.name "$GIT_NAME"
+      success "Set git user.name from GIT_NAME"
+    elif [ "$NON_INTERACTIVE" -eq 0 ]; then
+      read -r -p "Git user.name (leave blank to skip): " name
+      if [ -n "$name" ]; then
+        git config --global user.name "$name"
+        success "Set git user.name"
+      fi
+    else
+      warn "Git user.name not set"
+    fi
+  fi
+
+  if ! git config --global --get user.email >/dev/null 2>&1; then
+    if [ -n "${GIT_EMAIL:-}" ]; then
+      git config --global user.email "$GIT_EMAIL"
+      success "Set git user.email from GIT_EMAIL"
+    elif [ "$NON_INTERACTIVE" -eq 0 ]; then
+      read -r -p "Git user.email (leave blank to skip): " email
+      if [ -n "$email" ]; then
+        git config --global user.email "$email"
+        success "Set git user.email"
+      fi
+    else
+      warn "Git user.email not set"
     fi
   fi
 }
 
-setuplinklist=(
-  "vim/.vimrc ${HOME}/.vimrc"
-  "vim/.vimbackups/ ${HOME}/.vimbackups"
-  "vim ${HOME}/.config/nvim"
-  ".inputrc ${HOME}/.inputrc"
-  "bash/.bash_profile ${HOME}/.bash_profile"
-)
+info "Dotfiles setup wizard"
+if is_macos; then
+  info "Detected macOS"
+elif is_linux; then
+  info "Detected Linux"
+else
+  warn "Unknown OS, continuing anyway"
+fi
 
-mkdir -p ~/.config
-for i in "${setuplinklist[@]}"; do
-  link_file $i
-done
+setup_bash
+setup_vim
+setup_vscode
+setup_git
 
-printf "\033[38;5;64mSetup complete, please reload your shell to see any changes.\033[0m\n"
-
-# TODO: get the reload working correctly
-# echo "\033[38;5;64mSetup complete, reloading now...\033[0m"
-#
-# exec bash -lis
+success "Setup complete. Reload your shell to pick up changes."

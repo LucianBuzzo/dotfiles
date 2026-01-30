@@ -23,7 +23,7 @@ editor, shell, and common tooling.
 ```bash
 git clone --recursive git@github.com:LucianBuzzo/dotfiles.git .dotfiles
 cd .dotfiles
-npm install -g
+./setup.sh
 ```
 
 ### VS Code
@@ -31,6 +31,11 @@ npm install -g
 ```bash
 ./vscode/install.sh
 ```
+
+### Optional: Node tools
+
+`npm install -g` will install the Node dependencies and also run `./setup.sh`
+via `postinstall`.
 
 ### Bash
 

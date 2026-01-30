@@ -5,9 +5,24 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SETTINGS_SRC="$ROOT_DIR/vscode/settings.json"
 EXTENSIONS_SRC="$ROOT_DIR/vscode/extensions.txt"
 
-VSCODE_USER_DIR="$HOME/Library/Application Support/Code/User"
+VSCODE_USER_DIR="${VSCODE_USER_DIR:-}"
 SETTINGS_DEST="$VSCODE_USER_DIR/settings.json"
 
+if [ -z "$VSCODE_USER_DIR" ]; then
+  if [ "$(uname -s)" = "Darwin" ]; then
+    VSCODE_USER_DIR="$HOME/Library/Application Support/Code/User"
+  else
+    if [ -d "$HOME/.config/Code/User" ]; then
+      VSCODE_USER_DIR="$HOME/.config/Code/User"
+    elif [ -d "$HOME/.config/Code - OSS/User" ]; then
+      VSCODE_USER_DIR="$HOME/.config/Code - OSS/User"
+    else
+      VSCODE_USER_DIR="$HOME/.config/Code/User"
+    fi
+  fi
+fi
+
+SETTINGS_DEST="$VSCODE_USER_DIR/settings.json"
 mkdir -p "$VSCODE_USER_DIR"
 
 ln -sf "$SETTINGS_SRC" "$SETTINGS_DEST"
