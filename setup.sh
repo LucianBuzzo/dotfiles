@@ -140,15 +140,32 @@ link_path() {
 
 ensure_dir() {
   local dir="$1"
-  if [ ! -d "$dir" ]; then
-    if dry "Would create $dir"; then
-      :
-    else
-      mkdir -p "$dir"
-      success "Created $dir"
-    fi
-  else
+  if [ -d "$dir" ]; then
     info "Exists: $dir"
+    return 0
+  fi
+
+  if [ -L "$dir" ]; then
+    if [ "$FORCE" -eq 1 ] || confirm "Replace broken link $(basename "$dir")?"; then
+      local backup
+      backup="$(backup_path "$dir")"
+      if dry "Would back up $dir to $backup"; then
+        :
+      else
+        mv "$dir" "$backup"
+        info "Backed up to $backup"
+      fi
+    else
+      warn "Skipped: $dir"
+      return 0
+    fi
+  fi
+
+  if dry "Would create $dir"; then
+    :
+  else
+    mkdir -p "$dir"
+    success "Created $dir"
   fi
 }
 
