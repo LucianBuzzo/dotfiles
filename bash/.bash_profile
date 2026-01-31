@@ -23,6 +23,26 @@ if [ -f ~/.git-completion.bash ]; then
   . ~/.git-completion.bash
 fi
 
+#
+# Load git prompt (for __git_ps1) if available
+git_prompt_paths=(
+  "$HOME/.git-prompt.sh"
+  "/opt/homebrew/etc/bash_completion.d/git-prompt.sh"
+  "/opt/homebrew/share/git-core/git-prompt.sh"
+  "/usr/local/etc/bash_completion.d/git-prompt.sh"
+  "/usr/local/share/git-core/git-prompt.sh"
+  "/Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh"
+  "/Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh"
+)
+
+for candidate in "${git_prompt_paths[@]}"; do
+  if [ -f "$candidate" ]; then
+    # shellcheck source=/dev/null
+    . "$candidate"
+    break
+  fi
+done
+
 ###############################################################################
 # Aliases
 ###############################################################################
@@ -482,7 +502,7 @@ function get_prompt {
   echo -e "${face}${git_part} "
 }
 
-export PS1=$(get_prompt)
+PS1=$(get_prompt)
 
 export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
@@ -829,3 +849,13 @@ export HUSKY=0
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/lucianbuzzo/.lmstudio/bin"
 # End of LM Studio CLI section
+
+_cb_prompt_update='PS1=$(get_prompt)'
+if [[ "${PROMPT_COMMAND-}" != *"${_cb_prompt_update}"* ]]; then
+  if [ -n "${PROMPT_COMMAND-}" ]; then
+    PROMPT_COMMAND="${PROMPT_COMMAND};${_cb_prompt_update}"
+  else
+    PROMPT_COMMAND="${_cb_prompt_update}"
+  fi
+fi
+unset _cb_prompt_update
