@@ -66,18 +66,8 @@ if command -v ggrep >/dev/null 2>&1; then
     alias grep='ggrep'
 fi
 
-# If we're running on the local machine grab Brew installed vim, otherwise find
-# out where vim is installed and run that instead
-function vim {
-  # we need to turn off stty to allow <C-s> mappings
-  # Save and then restore terminal settings
-  local STTYOPTS="$(stty -g)"
-  stty stop '' -ixoff
-  local VIM
-  VIM="$(command -v vim)"
-  "$VIM" "$@"
-  stty "$STTYOPTS"
-}
+
+
 
 # Recursive search for text in files
 function findin {
