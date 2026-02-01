@@ -1,0 +1,28 @@
+[alias]
+  scratch-commit = commit -m 'f' --no-verify
+  push-force = push --force-with-lease
+  scom = commit -S --signoff
+  rebase-resign = rebase --exec 'git commit --amend --no-edit -n -S' -i origin/master
+  resign = commit --amend --no-edit -n -S
+[gpg]
+  program = /opt/homebrew/bin/gpg
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+[secrets]
+  providers = git secrets --aws-provider
+  patterns = (A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}
+  patterns = (\"|')?(AWS|aws|Aws)?_?(SECRET|secret|Secret)?_?(ACCESS|access|Access)?_?(KEY|key|Key)(\"|')?\\s*(:|=>|=)\\s*(\"|')?[A-Za-z0-9/\\+=]{40}(\"|')?
+  patterns = (\"|')?(AWS|aws|Aws)?_?(ACCOUNT|account|Account)_?(ID|id|Id)?(\"|')?\\s*(:|=>|=)\\s*(\"|')?[0-9]{4}\\-?[0-9]{4}\\-?[0-9]{4}(\"|')?
+  allowed = AKIAIOSFODNN7EXAMPLE
+  allowed = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+[commit]
+  template = ~/.gitmessage
+[core]
+  editor = vim
+[init]
+  defaultBranch = main
+[user]
+  signingkey = 55D27C4B3E8E381F

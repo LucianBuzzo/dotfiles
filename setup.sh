@@ -184,6 +184,21 @@ ensure_git_config() {
   fi
 }
 
+ensure_git_include_path() {
+  local path="$1"
+  if git config --global --get-all include.path 2>/dev/null | grep -Fxq "$path"; then
+    info "Git include.path already set"
+    return 0
+  fi
+
+  if dry "Would add git include.path \"$path\""; then
+    :
+  else
+    git config --global --add include.path "$path"
+    success "Added git include.path"
+  fi
+}
+
 setup_bash() {
   info "Bash: linking profile and input settings"
   link_path "bash/.bash_profile" "$HOME_DIR/.bash_profile"
@@ -218,6 +233,7 @@ setup_git() {
 
   info "Git: configuring defaults"
   link_path "git/.gitmessage" "$HOME_DIR/.gitmessage"
+  ensure_git_include_path "$ROOT_DIR/git/.gitconfig"
   ensure_git_config "core.editor" "vim"
   ensure_git_config "init.defaultBranch" "main"
   ensure_git_config "commit.template" "$HOME_DIR/.gitmessage"

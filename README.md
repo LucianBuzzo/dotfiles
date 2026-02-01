@@ -35,9 +35,16 @@ Dry run (no writes):
 
 ### Git
 
-`setup.sh` links the commit template to `~/.gitmessage` and sets
-`commit.template` so `git commit` uses the Conventional Commits template by
-default.
+`setup.sh` links the commit template to `~/.gitmessage`, adds a dotfiles Git
+include, and sets `commit.template` so `git commit` uses the Conventional
+Commits template by default.
+
+Git include (`git/.gitconfig`) covers:
+- Aliases: `scratch-commit`, `push-force`, `scom`, `rebase-resign`, `resign`
+- GPG program path
+- Git LFS filter config
+- git-secrets AWS patterns
+- Default branch + commit template
 
 ### VS Code
 
