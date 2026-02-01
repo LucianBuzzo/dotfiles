@@ -11,6 +11,7 @@ editor, shell, and common tooling.
 - Vim configuration and plugins
 - Shell scripts and command-line utilities
 - VS Code settings and extensions
+- Git commit template (Conventional Commits)
 
 ### Requirements
 
@@ -31,6 +32,12 @@ Dry run (no writes):
 ```bash
 ./setup.sh --dry-run
 ```
+
+### Git
+
+`setup.sh` links the commit template to `~/.gitmessage` and sets
+`commit.template` so `git commit` uses the Conventional Commits template by
+default.
 
 ### VS Code
 
