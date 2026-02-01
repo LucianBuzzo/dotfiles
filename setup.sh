@@ -217,8 +217,10 @@ setup_git() {
   fi
 
   info "Git: configuring defaults"
+  link_path "git/.gitmessage" "$HOME_DIR/.gitmessage"
   ensure_git_config "core.editor" "vim"
   ensure_git_config "init.defaultBranch" "main"
+  ensure_git_config "commit.template" "$HOME_DIR/.gitmessage"
 
   if ! git config --global --get user.name >/dev/null 2>&1; then
     if [ -n "${GIT_NAME:-}" ]; then

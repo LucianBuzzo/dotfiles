@@ -1,0 +1,29 @@
+# -------------------------------------------------
+# Conventional Commit Message Template
+# -------------------------------------------------
+# Format:
+#   <type>(<scope>): <short summary>
+#
+# Types:
+#   feat     A new feature
+#   fix      A bug fix
+#   docs     Documentation only changes
+#   style    Formatting, missing semi-colons, etc
+#   refactor Code change that neither fixes a bug nor adds a feature
+#   test     Adding missing tests
+#   chore    Build process or auxiliary tool changes
+#   ci       CI configuration changes
+#
+# Example:
+#   feat(api): add pagination to job search
+#
+# Body (optional):
+#   - Explain *what* and *why*, not *how*
+#   - Wrap at 72 characters
+#
+# Footer (optional):
+#   - BREAKING CHANGE:
+#   - Closes #123
+# -------------------------------------------------
+
+<type>(<scope>): <summary>
