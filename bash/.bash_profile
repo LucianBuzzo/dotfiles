@@ -661,9 +661,6 @@ function mfa_aws_login() {
   echo "Your kubernetes context is: $(kubectl config current-context)"
 }
 
-# RUBY
-eval "$(rbenv init - bash)"
-
 merge_renovate_branches() {
   # Get the current timestamp
   timestamp=$(date +%Y%m%d%H%M%S)
