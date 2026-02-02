@@ -617,7 +617,12 @@ ports() {
 # PIP
 export PATH="$HOME/Library/Python/3.9/bin:$PATH"
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# Homebrew: load shell env if Homebrew is installed.
+# Guarded so shells on hosts without Homebrew (most Linux servers/containers)
+# do not error; `brew shellenv` sets PATH and other vars appropriately.
+if command -v brew >/dev/null 2>&1; then
+  eval "$(brew shellenv)"
+fi
 
 export GPG_TTY=$(tty)
 
@@ -813,8 +818,9 @@ export CEREBRUM_SSL_KEY=~/cerebrum-local-ssl-certs/_wildcard.cerebrum.com-key.pe
 HISTSIZE=10000
 HISTFILESIZE=20000
 
-# Rust
-. "$HOME/.cargo/env"
+# Rust: source cargo's env file if it exists (installed via rustup).
+# Guarded to avoid errors on machines without Rust.
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 # Python
 alias python='python3'
@@ -823,10 +829,16 @@ alias python='python3'
 export BUN_INSTALL="$HOME/.bun"
 export PATH=$BUN_INSTALL/bin:$PATH
 
-. "$HOME/.local/bin/env"
+# Local env: optional per-user script; if present, source it.
+# Guarded so missing file is a no-op.
+[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 
 
-eval "$(direnv hook bash)"
+# direnv: enable project-scoped envs if installed. Requires `direnv allow`.
+# Guarded to avoid errors if direnv is not installed.
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook bash)"
+fi
 
 # deno
 export PATH=$PATH:$HOME/.deno/bin/
