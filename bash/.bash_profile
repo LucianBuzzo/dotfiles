@@ -477,19 +477,18 @@ function npm-which() {
 # Configures the bash prompt
 GIT_PS1_SHOWDIRTYSTATE=1
 
-#store prompts while protecting namespace
+# Build a safe, colorized prompt. Keep non-printing ANSI wrapped in \[ ... \]
+# so Bash can track cursor position correctly.
 function get_prompt {
-  c="\[\033["
-  p="${c}38;5;136\]"
+  local face git_part
 
-  face='\[\033[38;5;240m\]ಠ_ಠ\[\e[m\]\[\033[38;5;125m\] (\@)\[\em\]\[\e[m\] \[\033[38;5;37m\]\W'
-  local git_part=""
+  face='\[\e[38;5;240m\]ಠ_ಠ\[\e[0m\]\[\e[38;5;125m\] (\@)\[\e[0m\] \[\e[38;5;37m\]\W\[\e[0m\]'
+  git_part=""
   if declare -F __git_ps1 >/dev/null 2>&1; then
-    git_part="$(__git_ps1 ' \[\033[38;5;64m\](%s)\[\033[m\]')"
+    git_part="$(__git_ps1 ' \[\e[38;5;64m\](%s)\[\e[0m\]')"
   fi
 
-  n="${c}m]"
-  echo -e "${face}${git_part} "
+  printf '%s\n' "${face}${git_part} "
 }
 
 PS1=$(get_prompt)
@@ -827,6 +826,9 @@ HISTFILESIZE=20000
 # Python
 alias python='python3'
 
+# Roam CLI
+alias roam='~/bin/roam'
+
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH=$BUN_INSTALL/bin:$PATH
@@ -860,3 +862,18 @@ if [[ "${PROMPT_COMMAND-}" != *"${_cb_prompt_update}"* ]]; then
   fi
 fi
 unset _cb_prompt_update
+
+gravious() {
+  local sess
+  if [[ -n "$1" ]]; then
+    sess="$1"
+  else
+    local dir_slug timestamp
+    dir_slug="$(printf '%s' "${PWD#$HOME/}" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9._-' '-' | sed 's/^-*//; s/-*$//')"
+    timestamp="$(date +"%Y%m%d-%H%M")"
+    sess="${dir_slug}-${timestamp}"
+  fi
+
+  openclaw gateway status >/dev/null 2>&1 || openclaw gateway start
+  openclaw tui --session "$sess"
+}
