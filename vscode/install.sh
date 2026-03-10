@@ -28,6 +28,11 @@ mkdir -p "$VSCODE_USER_DIR"
 ln -sf "$SETTINGS_SRC" "$SETTINGS_DEST"
 echo "Linked VS Code settings to $SETTINGS_DEST"
 
+if [ "${SKIP_VSCODE_EXTENSIONS:-0}" = "1" ]; then
+  echo "Skipping VS Code extension install via SKIP_VSCODE_EXTENSIONS=1"
+  exit 0
+fi
+
 CODE_BIN=""
 if command -v code >/dev/null 2>&1; then
   CODE_BIN="code"

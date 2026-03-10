@@ -253,6 +253,11 @@ setup_git_completion() {
 }
 
 install_homebrew_formulae() {
+  if [ "${SKIP_HOMEBREW_CLI_TOOLS:-0}" = "1" ]; then
+    info "Homebrew CLI tools: skipping automatic install via SKIP_HOMEBREW_CLI_TOOLS=1"
+    return 0
+  fi
+
   if ! is_macos; then
     info "Homebrew CLI tools: skipping automatic install on non-macOS host"
     return 0
