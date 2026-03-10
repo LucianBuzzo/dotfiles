@@ -169,6 +169,75 @@ ensure_dir() {
   fi
 }
 
+link_or_copy_path() {
+  local origin="$1"
+  local dest="$2"
+
+  if [ ! -e "$origin" ]; then
+    warn "Missing source: $origin (skipping)"
+    return 1
+  fi
+
+  if [ -e "$dest" ] || [ -L "$dest" ]; then
+    if [ "$dest" -ef "$origin" ]; then
+      info "Already linked: $dest"
+      return 0
+    fi
+
+    if [ "$FORCE" -eq 1 ] || confirm "Overwrite $(basename "$dest")?"; then
+      local backup
+      backup="$(backup_path "$dest")"
+      if dry "Would back up $dest to $backup"; then
+        :
+      else
+        mv "$dest" "$backup"
+        info "Backed up to $backup"
+      fi
+    else
+      warn "Skipped: $dest"
+      return 0
+    fi
+  fi
+
+  mkdir -p "$(dirname "$dest")"
+  if dry "Would link $origin -> $dest"; then
+    :
+  else
+    ln -s "$origin" "$dest"
+    success "Linked $dest"
+  fi
+}
+
+setup_git_completion() {
+  local dest="$HOME_DIR/.git-completion.bash"
+  local git_completion_paths=()
+
+  if [ -n "${GIT_COMPLETION_SOURCE:-}" ]; then
+    git_completion_paths+=("$GIT_COMPLETION_SOURCE")
+  fi
+
+  git_completion_paths+=(
+    "/opt/homebrew/etc/bash_completion.d/git-completion.bash"
+    "/opt/homebrew/share/bash-completion/completions/git"
+    "/usr/local/etc/bash_completion.d/git-completion.bash"
+    "/usr/local/share/bash-completion/completions/git"
+    "/usr/share/bash-completion/completions/git"
+    "/Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash"
+    "/Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash"
+  )
+
+  for candidate in "${git_completion_paths[@]}"; do
+    if [ -f "$candidate" ]; then
+      info "Bash: enabling git completion from $candidate"
+      link_or_copy_path "$candidate" "$dest"
+      return 0
+    fi
+  done
+
+  warn "Git completion script not found; bash git autocompletion will remain disabled"
+  return 0
+}
+
 ensure_git_config() {
   local key="$1"
   local value="$2"
@@ -203,6 +272,7 @@ setup_bash() {
   info "Bash: linking profile and input settings"
   link_path "bash/.bash_profile" "$HOME_DIR/.bash_profile"
   link_path ".inputrc" "$HOME_DIR/.inputrc"
+  setup_git_completion
 }
 
 setup_vim() {

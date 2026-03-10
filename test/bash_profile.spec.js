@@ -16,6 +16,27 @@ const runBash = (command) => {
 }
 
 describe('bash_profile functions', () => {
+  describe('git completion', () => {
+    it('should register git completion when ~/.git-completion.bash exists', () => {
+      const tempHome = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'bash-home-'))
+
+      try {
+        fs.writeFileSync(
+          path.join(tempHome, '.git-completion.bash'),
+          'complete -F _minimal_git_completion git\n_minimal_git_completion() { return 0; }\n'
+        )
+
+        const result = execSync(`bash -c 'HOME="${tempHome}" source ${bashProfilePath} && complete -p git'`, {
+          encoding: 'utf8'
+        }).trim()
+
+        expect(result).toContain('_minimal_git_completion')
+      } finally {
+        fs.rmSync(tempHome, { recursive: true, force: true })
+      }
+    })
+  })
+
   describe('findfilename', () => {
     it('should find files by name', () => {
       const result = runBash('findfilename package.json')

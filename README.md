@@ -60,7 +60,9 @@ via `postinstall`.
 ### Bash
 
 Main config lives in `bash/.bash_profile`. It includes aliases, functions, and a
-directory-stack powered `cd` replacement.
+directory-stack powered `cd` replacement. `setup.sh` also links a detected git
+completion script to `~/.git-completion.bash` so git tab completion is available
+when the profile loads.
 
 | Command | Description |
 | --- | --- |
