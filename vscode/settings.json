@@ -3,7 +3,7 @@
   "editor.inlineSuggest.enabled": true,
   "editor.fontLigatures": "'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'zero', 'onum', 'calt'",
   "editor.fontFamily": "Cascadia Code, Menlo, Monaco, 'Courier New', monospace",
-  "editor.fontSize": 16,
+  "editor.fontSize": 13,
   "files.autoSave": "onFocusChange",
   "terminal.integrated.defaultProfile.osx": "bash",
   "debug.console.fontSize": 14,
@@ -15,7 +15,7 @@
     "yaml": true,
     "rust": false
   },
-  "terminal.integrated.fontSize": 16,
+  "terminal.integrated.fontSize": 13,
   "[javascript]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
