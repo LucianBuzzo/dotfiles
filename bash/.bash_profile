@@ -23,6 +23,41 @@ if [ -f ~/.git-completion.bash ]; then
   . ~/.git-completion.bash
 fi
 
+# Load bash-completion if it is installed.
+bash_completion_paths=(
+  "/opt/homebrew/etc/profile.d/bash_completion.sh"
+  "/usr/local/etc/profile.d/bash_completion.sh"
+  "/opt/homebrew/etc/bash_completion"
+  "/usr/local/etc/bash_completion"
+)
+
+for candidate in "${bash_completion_paths[@]}"; do
+  if [ -f "$candidate" ]; then
+    # shellcheck source=/dev/null
+    . "$candidate"
+    break
+  fi
+done
+unset bash_completion_paths
+
+# Load fzf completion and key bindings if available.
+fzf_shell_paths=(
+  "/opt/homebrew/opt/fzf/shell"
+  "/usr/local/opt/fzf/shell"
+)
+
+for candidate in "${fzf_shell_paths[@]}"; do
+  if [ -f "$candidate/completion.bash" ]; then
+    # shellcheck source=/dev/null
+    . "$candidate/completion.bash"
+  fi
+  if [ -f "$candidate/key-bindings.bash" ]; then
+    # shellcheck source=/dev/null
+    . "$candidate/key-bindings.bash"
+  fi
+done
+unset fzf_shell_paths
+
 #
 # Load git prompt (for __git_ps1) if available
 git_prompt_paths=(
@@ -48,7 +83,11 @@ done
 ###############################################################################
 
 alias reloadbash='. ~/.bash_profile'
-alias ll='ls -alhFG'
+if command -v eza >/dev/null 2>&1; then
+  alias ll='eza -alh --group-directories-first'
+else
+  alias ll='ls -alhFG'
+fi
 alias gs='git status'
 alias mp='markdown-preview'
 # Generate a 16 char password using md5
@@ -842,6 +881,16 @@ export PATH=$BUN_INSTALL/bin:$PATH
 # Guarded to avoid errors if direnv is not installed.
 if command -v direnv >/dev/null 2>&1; then
   eval "$(direnv hook bash)"
+fi
+
+# zoxide: smarter directory jumping via `z`.
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init bash)"
+fi
+
+# atuin: enhanced shell history and search.
+if command -v atuin >/dev/null 2>&1; then
+  eval "$(atuin init bash)"
 fi
 
 # deno

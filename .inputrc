@@ -1,0 +1,10 @@
+set completion-ignore-case on
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+set mark-symlinked-directories on
+set colored-stats on
+set visible-stats on
+
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\C-f": menu-complete

@@ -58,6 +58,20 @@ is_linux() {
   [ "$(uname -s)" = "Linux" ]
 }
 
+brew_bin() {
+  if [ -x /opt/homebrew/bin/brew ]; then
+    echo "/opt/homebrew/bin/brew"
+    return 0
+  fi
+
+  if [ -x /usr/local/bin/brew ]; then
+    echo "/usr/local/bin/brew"
+    return 0
+  fi
+
+  return 1
+}
+
 info() {
   printf "\033[38;5;240m%s\033[0m\n" "$1"
 }
@@ -238,6 +252,53 @@ setup_git_completion() {
   return 0
 }
 
+install_homebrew_formulae() {
+  if ! is_macos; then
+    info "Homebrew CLI tools: skipping automatic install on non-macOS host"
+    return 0
+  fi
+
+  local brew
+  if ! brew="$(brew_bin)"; then
+    warn "Homebrew not found; skipping CLI tool installation"
+    return 0
+  fi
+
+  local packages=(
+    "bash-completion@2"
+    "fzf"
+    "zoxide"
+    "atuin"
+    "fd"
+    "bat"
+    "eza"
+    "git-delta"
+  )
+  local missing=()
+  local pkg
+
+  info "Homebrew: ensuring CLI productivity tools are installed"
+  for pkg in "${packages[@]}"; do
+    if "$brew" list --formula "$pkg" >/dev/null 2>&1; then
+      info "Homebrew: $pkg already installed"
+    else
+      missing+=("$pkg")
+    fi
+  done
+
+  if [ "${#missing[@]}" -eq 0 ]; then
+    success "Homebrew CLI tools already installed"
+    return 0
+  fi
+
+  if dry "Would install Homebrew formulae: ${missing[*]}"; then
+    return 0
+  fi
+
+  "$brew" install "${missing[@]}"
+  success "Installed Homebrew formulae: ${missing[*]}"
+}
+
 ensure_git_config() {
   local key="$1"
   local value="$2"
@@ -308,6 +369,12 @@ setup_git() {
   ensure_git_config "init.defaultBranch" "main"
   ensure_git_config "commit.template" "$HOME_DIR/.gitmessage"
 
+  if command -v delta >/dev/null 2>&1 || [ -x /opt/homebrew/bin/delta ] || [ -x /usr/local/bin/delta ]; then
+    ensure_git_config "core.pager" "delta"
+    ensure_git_config "interactive.diffFilter" "delta --color-only"
+    ensure_git_config "delta.navigate" "true"
+  fi
+
   if ! git config --global --get user.name >/dev/null 2>&1; then
     if [ -n "${GIT_NAME:-}" ]; then
       if dry "Would set git user.name from GIT_NAME"; then
@@ -364,6 +431,7 @@ else
   warn "Unknown OS, continuing anyway"
 fi
 
+install_homebrew_formulae
 setup_bash
 setup_vim
 setup_vscode

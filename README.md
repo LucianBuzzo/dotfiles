@@ -27,6 +27,9 @@ cd .dotfiles
 ./setup.sh
 ```
 
+On macOS, `setup.sh` also installs the core CLI productivity toolchain via
+Homebrew when Homebrew is available.
+
 Dry run (no writes):
 
 ```bash
@@ -62,7 +65,24 @@ via `postinstall`.
 Main config lives in `bash/.bash_profile`. It includes aliases, functions, and a
 directory-stack powered `cd` replacement. `setup.sh` also links a detected git
 completion script to `~/.git-completion.bash` so git tab completion is available
-when the profile loads.
+when the profile loads, links `.inputrc`, and wires optional shell integrations
+for installed tools.
+
+Installed via `setup.sh` on macOS (Homebrew):
+
+| Tool | Link | Why it is included |
+| --- | --- | --- |
+| `bash-completion@2` | <https://github.com/scop/bash-completion> | Enables broader Bash completions beyond Git. |
+| `fzf` | <https://github.com/junegunn/fzf> | Fuzzy file, history, and completion workflows. |
+| `zoxide` | <https://github.com/ajeetdsouza/zoxide> | Faster directory jumping with frecency-based `z`. |
+| `atuin` | <https://atuin.sh/> | Better shell history search and recall. |
+| `fd` | <https://github.com/sharkdp/fd> | Faster, ergonomic file finding. |
+| `bat` | <https://github.com/sharkdp/bat> | Syntax-highlighted file previews, useful with `fzf`. |
+| `eza` | <https://github.com/eza-community/eza> | Modern `ls` replacement; `ll` uses it when installed. |
+| `git-delta` | <https://github.com/dandavison/delta> | Improved Git diff and commit output. |
+
+Readline defaults from `.inputrc` include case-insensitive completion, immediate
+completion listings, and prefix-based up/down history search.
 
 | Command | Description |
 | --- | --- |
