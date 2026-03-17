@@ -22,6 +22,9 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 autoload -Uz colors && colors
 
+ZDOTFILES_DIR="${${(%):-%N}:A:h}"
+source "$ZDOTFILES_DIR/.zsh_extras.zsh"
+
 if command -v eza >/dev/null 2>&1; then
   alias ll='eza -alh --group-directories-first'
 else

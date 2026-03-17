@@ -60,40 +60,13 @@ Git include (`git/.gitconfig`) covers:
 `npm install -g` will install the Node dependencies and also run `./setup.sh`
 via `postinstall`.
 
-### Bash
-
-Main config lives in `bash/.bash_profile`. It includes aliases, functions, and a
-directory-stack powered `cd` replacement. `setup.sh` also links a detected git
-completion script to `~/.git-completion.bash` so git tab completion is available
-when the profile loads, links `.inputrc`, installs `ble.sh` to
-`~/.local/share/blesh` for Bash line editing support, and wires optional shell
-integrations for installed tools.
-
-Installed via `setup.sh` on macOS (Homebrew):
-
-| Tool | Link | Why it is included |
-| --- | --- | --- |
-| `bash-completion@2` | <https://github.com/scop/bash-completion> | Enables broader Bash completions beyond Git. |
-| `ble.sh` | <https://github.com/akinomyoga/ble.sh> | Required by Atuin's recommended Bash integration. |
-| `fzf` | <https://github.com/junegunn/fzf> | Fuzzy file, history, and completion workflows. |
-| `zoxide` | <https://github.com/ajeetdsouza/zoxide> | Faster directory jumping with frecency-based `z`. |
-| `atuin` | <https://atuin.sh/> | Better shell history search and recall. |
-| `fd` | <https://github.com/sharkdp/fd> | Faster, ergonomic file finding. |
-| `bat` | <https://github.com/sharkdp/bat> | Syntax-highlighted file previews, useful with `fzf`. |
-| `eza` | <https://github.com/eza-community/eza> | Modern `ls` replacement; `ll` uses it when installed. |
-| `git-delta` | <https://github.com/dandavison/delta> | Improved Git diff and commit output. |
-
-Readline defaults from `.inputrc` include case-insensitive completion, immediate
-completion listings, and prefix-based up/down history search.
-
 ### Zsh
 
-Main config lives in `zsh/.zshrc`. `setup.sh` links it to `~/.zshrc` and the
-config enables native `zsh` vi mode, completion, shared history, `fzf`
-keybindings via `zsh-vi-mode`, `zoxide`, `atuin`, and a `starship` prompt when
-those tools are installed. `starship.toml` is linked to
-`~/.config/starship.toml` and includes different prompt symbols for insert and
-vi command modes.
+Main config lives in `zsh/.zshrc`, with custom aliases, env vars, and helper
+functions in `zsh/.zsh_extras.zsh`. `setup.sh` links `~/.zshrc` and
+`~/.config/starship.toml`; zsh is the primary supported interactive shell. The
+config enables vi mode, completion, shared history, `fzf`, `zoxide`, `atuin`,
+`direnv`, and a `starship` prompt when those tools are installed.
 
 Installed via `setup.sh` on macOS (Homebrew):
 
@@ -104,6 +77,10 @@ Installed via `setup.sh` on macOS (Homebrew):
 | `fzf` | <https://github.com/junegunn/fzf> | Fuzzy history, file, and completion workflows. |
 | `zoxide` | <https://github.com/ajeetdsouza/zoxide> | Faster directory jumping with frecency-based `z`. |
 | `atuin` | <https://atuin.sh/> | Better shell history search and recall. |
+| `fd` | <https://github.com/sharkdp/fd> | Faster, ergonomic file finding. |
+| `bat` | <https://github.com/sharkdp/bat> | Syntax-highlighted file previews, useful with `fzf`. |
+| `eza` | <https://github.com/eza-community/eza> | Modern `ls` replacement; `ll` uses it when installed. |
+| `git-delta` | <https://github.com/dandavison/delta> | Improved Git diff and commit output. |
 
 Useful commands after setup:
 
@@ -128,7 +105,6 @@ Main config lives in `ghostty/config`. `setup.sh` links it to
 
 | Command | Description |
 | --- | --- |
-| `reloadbash` | Reload the current Bash profile. |
 | `ll` | List files with details (human readable, classify, show hidden). |
 | `gs` | `git status`. |
 | `mp` | Run `markdown-preview`. |
@@ -174,7 +150,6 @@ Main config lives in `ghostty/config`. `setup.sh` links it to
 
 ```text
 .
-├── bash/        Bash config and helpers
 ├── ghostty/     Ghostty terminal config
 ├── zsh/         Zsh config
 ├── vim/         Vim configuration

@@ -314,7 +314,6 @@ install_homebrew_formulae() {
   fi
 
   local packages=(
-    "bash-completion@2"
     "fzf"
     "zoxide"
     "atuin"
@@ -378,14 +377,6 @@ ensure_git_include_path() {
     git config --global --add include.path "$path"
     success "Added git include.path"
   fi
-}
-
-setup_bash() {
-  info "Bash: linking profile and input settings"
-  link_path "bash/.bash_profile" "$HOME_DIR/.bash_profile"
-  link_path ".inputrc" "$HOME_DIR/.inputrc"
-  install_ble_sh
-  setup_git_completion
 }
 
 setup_zsh() {
@@ -503,7 +494,6 @@ else
 fi
 
 install_homebrew_formulae
-setup_bash
 setup_zsh
 setup_ghostty
 setup_vim

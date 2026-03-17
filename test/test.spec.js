@@ -18,7 +18,6 @@ describe('setup.sh', () => {
         ...process.env,
         HOME: TEST_HOME,
         PATH: TEST_PATH,
-        SKIP_BLE_SH_INSTALL: '1',
         SKIP_HOMEBREW_CLI_TOOLS: '1',
         SKIP_VSCODE_EXTENSIONS: '1',
         VSCODE_USER_DIR: TEST_VSCODE_USER_DIR,
@@ -29,39 +28,6 @@ describe('setup.sh', () => {
 
   afterAll(() => {
     fs.rmSync(TEST_HOME, { recursive: true, force: true })
-  })
-
-  it('should link git completion into the home directory when a source is provided', () => {
-    const tempSourceDir = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'git-completion-'))
-    const completionSource = path.join(tempSourceDir, 'git-completion.bash')
-
-    fs.writeFileSync(completionSource, '# fake git completion\n')
-
-    try {
-      execSync('./setup.sh --yes', {
-        cwd: CWD,
-        env: {
-          ...process.env,
-          HOME: TEST_HOME,
-          PATH: TEST_PATH,
-          SKIP_BLE_SH_INSTALL: '1',
-          SKIP_HOMEBREW_CLI_TOOLS: '1',
-          SKIP_VSCODE_EXTENSIONS: '1',
-          VSCODE_USER_DIR: TEST_VSCODE_USER_DIR,
-          GIT_COMPLETION_SOURCE: completionSource,
-        },
-        stdio: 'ignore',
-      })
-
-      const linkPath = path.join(TEST_HOME, '.git-completion.bash')
-      const stats = fs.lstatSync(linkPath)
-      expect(stats.isSymbolicLink()).toBe(true)
-
-      const linkTargetPath = fs.readlinkSync(linkPath)
-      expect(linkTargetPath).toBe(completionSource)
-    } finally {
-      fs.rmSync(tempSourceDir, { recursive: true, force: true })
-    }
   })
 
   it('should create a symlink for .vimrc in the home directory', () => {
@@ -86,24 +52,6 @@ describe('setup.sh', () => {
 
     const linkTargetPath = fs.readlinkSync(linkPath)
     expect(linkTargetPath).toBe(path.join(CWD, 'vim'))
-  })
-
-  it('should create a symlink for .inputrc in the home directory', () => {
-    const linkPath = path.join(TEST_HOME, '.inputrc')
-    const stats = fs.lstatSync(linkPath)
-    expect(!!stats && stats.isSymbolicLink()).toBe(true)
-
-    const linkTargetPath = fs.readlinkSync(linkPath)
-    expect(linkTargetPath).toBe(path.join(CWD, '.inputrc'))
-  })
-
-  it('should create a symlink for .bash_profile in the home directory', () => {
-    const linkPath = path.join(TEST_HOME, '.bash_profile')
-    const stats = fs.lstatSync(linkPath)
-    expect(!!stats && stats.isSymbolicLink()).toBe(true)
-
-    const linkTargetPath = fs.readlinkSync(linkPath)
-    expect(linkTargetPath).toBe(path.join(CWD, 'bash', '.bash_profile'))
   })
 
   it('should create a symlink for .zshrc in the home directory', () => {
@@ -133,30 +81,6 @@ describe('setup.sh', () => {
     expect(linkTargetPath).toBe(path.join(CWD, 'ghostty', 'config'))
   })
 
-  it('should not fail when the ble.sh install directory already exists without ble.sh', () => {
-    const tempBleDir = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'blesh-existing-'))
-
-    fs.writeFileSync(path.join(tempBleDir, 'README.txt'), 'placeholder\n')
-
-    expect(() => {
-      execSync('./setup.sh --yes', {
-        cwd: CWD,
-        env: {
-          ...process.env,
-          HOME: TEST_HOME,
-          PATH: TEST_PATH,
-          BLE_SH_INSTALL_DIR: tempBleDir,
-          SKIP_HOMEBREW_CLI_TOOLS: '1',
-          SKIP_VSCODE_EXTENSIONS: '1',
-          VSCODE_USER_DIR: TEST_VSCODE_USER_DIR,
-        },
-        stdio: 'ignore',
-      })
-    }).not.toThrow()
-
-    fs.rmSync(tempBleDir, { recursive: true, force: true })
-  })
-
   it('should create a symlink for the Ghostty config in .config on Linux', () => {
     const linuxHome = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'dotfiles-linux-home-'))
     const linuxVscodeDir = path.join(linuxHome, 'vscode-user')
@@ -168,7 +92,6 @@ describe('setup.sh', () => {
           ...process.env,
           HOME: linuxHome,
           PATH: TEST_PATH,
-          SKIP_BLE_SH_INSTALL: '1',
           SKIP_HOMEBREW_CLI_TOOLS: '1',
           SKIP_VSCODE_EXTENSIONS: '1',
           VSCODE_USER_DIR: linuxVscodeDir,
