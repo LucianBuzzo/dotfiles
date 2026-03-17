@@ -124,6 +124,15 @@ describe('setup.sh', () => {
     expect(linkTargetPath).toBe(path.join(CWD, 'starship.toml'))
   })
 
+  it('should create a symlink for the Ghostty config in the app support directory on macOS', () => {
+    const linkPath = path.join(TEST_HOME, 'Library', 'Application Support', 'com.mitchellh.ghostty', 'config')
+    const stats = fs.lstatSync(linkPath)
+    expect(!!stats && stats.isSymbolicLink()).toBe(true)
+
+    const linkTargetPath = fs.readlinkSync(linkPath)
+    expect(linkTargetPath).toBe(path.join(CWD, 'ghostty', 'config'))
+  })
+
   it('should not fail when the ble.sh install directory already exists without ble.sh', () => {
     const tempBleDir = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'blesh-existing-'))
 
@@ -146,6 +155,37 @@ describe('setup.sh', () => {
     }).not.toThrow()
 
     fs.rmSync(tempBleDir, { recursive: true, force: true })
+  })
+
+  it('should create a symlink for the Ghostty config in .config on Linux', () => {
+    const linuxHome = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'dotfiles-linux-home-'))
+    const linuxVscodeDir = path.join(linuxHome, 'vscode-user')
+
+    try {
+      execSync('./setup.sh --yes', {
+        cwd: CWD,
+        env: {
+          ...process.env,
+          HOME: linuxHome,
+          PATH: TEST_PATH,
+          SKIP_BLE_SH_INSTALL: '1',
+          SKIP_HOMEBREW_CLI_TOOLS: '1',
+          SKIP_VSCODE_EXTENSIONS: '1',
+          VSCODE_USER_DIR: linuxVscodeDir,
+          UNAME_S: 'Linux',
+        },
+        stdio: 'ignore',
+      })
+
+      const linkPath = path.join(linuxHome, '.config', 'ghostty', 'config')
+      const stats = fs.lstatSync(linkPath)
+      expect(!!stats && stats.isSymbolicLink()).toBe(true)
+
+      const linkTargetPath = fs.readlinkSync(linkPath)
+      expect(linkTargetPath).toBe(path.join(CWD, 'ghostty', 'config'))
+    } finally {
+      fs.rmSync(linuxHome, { recursive: true, force: true })
+    }
   })
 
 })

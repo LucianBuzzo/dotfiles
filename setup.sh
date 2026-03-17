@@ -50,12 +50,21 @@ while [ $# -gt 0 ]; do
   shift
 done
 
+os_name() {
+  if [ -n "${UNAME_S:-}" ]; then
+    echo "$UNAME_S"
+    return 0
+  fi
+
+  uname -s
+}
+
 is_macos() {
-  [ "$(uname -s)" = "Darwin" ]
+  [ "$(os_name)" = "Darwin" ]
 }
 
 is_linux() {
-  [ "$(uname -s)" = "Linux" ]
+  [ "$(os_name)" = "Linux" ]
 }
 
 brew_bin() {
@@ -384,6 +393,19 @@ setup_zsh() {
   link_path "starship.toml" "$HOME_DIR/.config/starship.toml"
 }
 
+setup_ghostty() {
+  local ghostty_dest
+
+  if is_macos; then
+    ghostty_dest="$HOME_DIR/Library/Application Support/com.mitchellh.ghostty/config"
+  else
+    ghostty_dest="$HOME_DIR/.config/ghostty/config"
+  fi
+
+  info "Ghostty: linking config"
+  link_path "ghostty/config" "$ghostty_dest"
+}
+
 setup_vim() {
   info "Vim: linking configs"
   link_path "vim/.vimrc" "$HOME_DIR/.vimrc"
@@ -482,6 +504,7 @@ fi
 install_homebrew_formulae
 setup_bash
 setup_zsh
+setup_ghostty
 setup_vim
 setup_vscode
 setup_git

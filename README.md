@@ -117,6 +117,13 @@ To switch your login shell to `zsh`:
 chsh -s "$(command -v zsh)"
 ```
 
+### Ghostty
+
+Main config lives in `ghostty/config`. `setup.sh` links it to
+`~/Library/Application Support/com.mitchellh.ghostty/config` on macOS and
+`~/.config/ghostty/config` on Linux. The tracked config currently sets the
+`iTerm2 Solarized Light` theme, `Cascadia Mono PL`, and an underline cursor.
+
 | Command | Description |
 | --- | --- |
 | `reloadbash` | Reload the current Bash profile. |
@@ -166,6 +173,7 @@ chsh -s "$(command -v zsh)"
 ```text
 .
 ├── bash/        Bash config and helpers
+├── ghostty/     Ghostty terminal config
 ├── zsh/         Zsh config
 ├── vim/         Vim configuration
 ├── vscode/      VS Code settings and install script
