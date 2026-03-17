@@ -64,4 +64,38 @@ describe('zshrc', () => {
       fs.rmSync(tempHome, { recursive: true, force: true })
     }
   })
+
+  it('configures atuin with the custom down-arrow widget', () => {
+    const tempHome = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'zsh-home-'))
+    const tempBin = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'zsh-bin-'))
+    const atuinPath = path.join(tempBin, 'atuin')
+
+    try {
+      fs.writeFileSync(
+        atuinPath,
+        [
+          '#!/bin/sh',
+          'if [ "$1" = "init" ] && [ "$2" = "zsh" ] && [ "$3" = "--disable-up-arrow" ]; then',
+          '  cat <<\'EOF\'',
+          'atuin-search() { :; }',
+          'atuin-search-viins() { :; }',
+          'atuin-search-vicmd() { :; }',
+          'EOF',
+          'fi',
+          '',
+        ].join('\n')
+      )
+      fs.chmodSync(atuinPath, 0o755)
+
+      const result = execSync(
+        `env -i HOME="${tempHome}" PATH="${tempBin}:${TEST_PATH}" zsh -c 'source "${zshrcPath}" >/dev/null 2>&1; printf "%s:%s:%s" "$(bindkey "^[[B")" "$(bindkey -M viins "^[[B")" "$(bindkey -M vicmd j)"'`,
+        { encoding: 'utf8' }
+      ).trim()
+
+      expect(result).toContain('down-line-or-search-but-atuin-if-at-end')
+    } finally {
+      fs.rmSync(tempHome, { recursive: true, force: true })
+      fs.rmSync(tempBin, { recursive: true, force: true })
+    }
+  })
 })

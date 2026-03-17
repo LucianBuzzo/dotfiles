@@ -108,7 +108,28 @@ if command -v zoxide >/dev/null 2>&1; then
 fi
 
 if command -v atuin >/dev/null 2>&1; then
-  eval "$(atuin init zsh)"
+  eval "$(atuin init zsh --disable-up-arrow)"
+
+  _down_line_or_search_but_atuin_if_at_end() {
+    if ! zle down-line-or-search -f nolast; then
+      if [[ "$LASTWIDGET" = "up-line-or-history" ]]; then
+        zle -I
+        zle kill-buffer
+      else
+        case "$KEYMAP" in
+          viins|vicmd) zle "atuin-search-$KEYMAP" ;;
+          *) zle atuin-search ;;
+        esac
+      fi
+    fi
+  }
+
+  zle -N down-line-or-search-but-atuin-if-at-end _down_line_or_search_but_atuin_if_at_end
+  bindkey '^[[B' down-line-or-search-but-atuin-if-at-end
+  bindkey '^[OB' down-line-or-search-but-atuin-if-at-end
+  bindkey -M viins '^[[B' down-line-or-search-but-atuin-if-at-end
+  bindkey -M viins '^[OB' down-line-or-search-but-atuin-if-at-end
+  bindkey -M vicmd 'j' down-line-or-search-but-atuin-if-at-end
 fi
 
 if command -v starship >/dev/null 2>&1; then
