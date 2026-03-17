@@ -1,0 +1,38 @@
+format = "${custom.face}$time $directory$git_branch$git_status$fill$cmd_duration$line_break$character"
+
+[custom.face]
+command = 'echo "ಠ_ಠ"'
+when = "true"
+format = "[$output](bold bright-black) "
+
+[fill]
+symbol = " "
+
+[time]
+disabled = false
+time_format = "%I:%M %p"
+format = "[($time)](bold purple)"
+
+[directory]
+truncate_to_repo = false
+style = "bold cyan"
+
+[git_branch]
+symbol = "git:"
+style = "bold yellow"
+format = " [$symbol$branch]($style)"
+
+[git_status]
+style = "bold red"
+
+[cmd_duration]
+min_time = 500
+format = " [$duration]($style)"
+style = "dimmed white"
+
+[character]
+success_symbol = "[>](bold green)"
+error_symbol = "[>](bold red)"
+vimcmd_symbol = "[<](bold yellow)"
+vimcmd_visual_symbol = "[<](bold magenta)"
+vimcmd_replace_symbol = "[<](bold cyan)"

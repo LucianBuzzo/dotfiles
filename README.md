@@ -86,6 +86,37 @@ Installed via `setup.sh` on macOS (Homebrew):
 Readline defaults from `.inputrc` include case-insensitive completion, immediate
 completion listings, and prefix-based up/down history search.
 
+### Zsh
+
+Main config lives in `zsh/.zshrc`. `setup.sh` links it to `~/.zshrc` and the
+config enables native `zsh` vi mode, completion, shared history, `fzf`
+keybindings, `zoxide`, `atuin`, and a `starship` prompt when those tools are
+installed. `starship.toml` is linked to `~/.config/starship.toml` and includes
+different prompt symbols for insert and vi command modes.
+
+Installed via `setup.sh` on macOS (Homebrew):
+
+| Tool | Link | Why it is included |
+| --- | --- | --- |
+| `starship` | <https://starship.rs/> | Fast cross-shell prompt with Git/runtime context. |
+| `fzf` | <https://github.com/junegunn/fzf> | Fuzzy history, file, and completion workflows. |
+| `zoxide` | <https://github.com/ajeetdsouza/zoxide> | Faster directory jumping with frecency-based `z`. |
+| `atuin` | <https://atuin.sh/> | Better shell history search and recall. |
+
+Useful commands after setup:
+
+| Command | Description |
+| --- | --- |
+| `reloadzsh` | Reload the current Zsh config. |
+| `bindkey -v` | Enables vi keybindings for command-line editing. |
+| `z <name>` | Jump to a frequently used directory via `zoxide`. |
+
+To switch your login shell to `zsh`:
+
+```bash
+chsh -s "$(command -v zsh)"
+```
+
 | Command | Description |
 | --- | --- |
 | `reloadbash` | Reload the current Bash profile. |
@@ -135,6 +166,7 @@ completion listings, and prefix-based up/down history search.
 ```text
 .
 ├── bash/        Bash config and helpers
+├── zsh/         Zsh config
 ├── vim/         Vim configuration
 ├── vscode/      VS Code settings and install script
 ├── setup.sh     Bootstrap/install entrypoint

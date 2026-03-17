@@ -106,4 +106,46 @@ describe('setup.sh', () => {
     expect(linkTargetPath).toBe(path.join(CWD, 'bash', '.bash_profile'))
   })
 
+  it('should create a symlink for .zshrc in the home directory', () => {
+    const linkPath = path.join(TEST_HOME, '.zshrc')
+    const stats = fs.lstatSync(linkPath)
+    expect(!!stats && stats.isSymbolicLink()).toBe(true)
+
+    const linkTargetPath = fs.readlinkSync(linkPath)
+    expect(linkTargetPath).toBe(path.join(CWD, 'zsh', '.zshrc'))
+  })
+
+  it('should create a symlink for the starship config in the config directory', () => {
+    const linkPath = path.join(TEST_HOME, '.config', 'starship.toml')
+    const stats = fs.lstatSync(linkPath)
+    expect(!!stats && stats.isSymbolicLink()).toBe(true)
+
+    const linkTargetPath = fs.readlinkSync(linkPath)
+    expect(linkTargetPath).toBe(path.join(CWD, 'starship.toml'))
+  })
+
+  it('should not fail when the ble.sh install directory already exists without ble.sh', () => {
+    const tempBleDir = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'blesh-existing-'))
+
+    fs.writeFileSync(path.join(tempBleDir, 'README.txt'), 'placeholder\n')
+
+    expect(() => {
+      execSync('./setup.sh --yes', {
+        cwd: CWD,
+        env: {
+          ...process.env,
+          HOME: TEST_HOME,
+          PATH: TEST_PATH,
+          BLE_SH_INSTALL_DIR: tempBleDir,
+          SKIP_HOMEBREW_CLI_TOOLS: '1',
+          SKIP_VSCODE_EXTENSIONS: '1',
+          VSCODE_USER_DIR: TEST_VSCODE_USER_DIR,
+        },
+        stdio: 'ignore',
+      })
+    }).not.toThrow()
+
+    fs.rmSync(tempBleDir, { recursive: true, force: true })
+  })
+
 })

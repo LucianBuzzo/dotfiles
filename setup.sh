@@ -237,6 +237,11 @@ install_ble_sh() {
     return 0
   fi
 
+  if [ -e "$install_dir" ]; then
+    warn "ble.sh install directory already exists without ble.sh; skipping automatic install"
+    return 0
+  fi
+
   if ! command -v git >/dev/null 2>&1; then
     warn "Git not found; cannot install ble.sh automatically"
     return 0
@@ -304,6 +309,7 @@ install_homebrew_formulae() {
     "fzf"
     "zoxide"
     "atuin"
+    "starship"
     "fd"
     "bat"
     "eza"
@@ -370,6 +376,12 @@ setup_bash() {
   link_path ".inputrc" "$HOME_DIR/.inputrc"
   install_ble_sh
   setup_git_completion
+}
+
+setup_zsh() {
+  info "Zsh: linking shell config"
+  link_path "zsh/.zshrc" "$HOME_DIR/.zshrc"
+  link_path "starship.toml" "$HOME_DIR/.config/starship.toml"
 }
 
 setup_vim() {
@@ -469,8 +481,10 @@ fi
 
 install_homebrew_formulae
 setup_bash
+setup_zsh
 setup_vim
 setup_vscode
 setup_git
 
 success "Setup complete. Reload your shell to pick up changes."
+info "To switch your login shell to zsh: chsh -s \"$(command -v zsh)\""
