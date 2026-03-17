@@ -222,6 +222,36 @@ link_or_copy_path() {
   fi
 }
 
+install_ble_sh() {
+  if [ "${SKIP_BLE_SH_INSTALL:-0}" = "1" ]; then
+    info "ble.sh: skipping automatic install via SKIP_BLE_SH_INSTALL=1"
+    return 0
+  fi
+
+  local install_dir="${BLE_SH_INSTALL_DIR:-$HOME_DIR/.local/share/blesh}"
+  local ble_file="$install_dir/ble.sh"
+  local repo_url="${BLE_SH_REPO_URL:-https://github.com/akinomyoga/ble.sh.git}"
+
+  if [ -f "$ble_file" ]; then
+    info "ble.sh already installed at $install_dir"
+    return 0
+  fi
+
+  if ! command -v git >/dev/null 2>&1; then
+    warn "Git not found; cannot install ble.sh automatically"
+    return 0
+  fi
+
+  if dry "Would clone ble.sh into $install_dir"; then
+    return 0
+  fi
+
+  mkdir -p "$(dirname "$install_dir")"
+  info "Bash: installing ble.sh into $install_dir"
+  git clone --depth 1 "$repo_url" "$install_dir"
+  success "Installed ble.sh"
+}
+
 setup_git_completion() {
   local dest="$HOME_DIR/.git-completion.bash"
   local git_completion_paths=()
@@ -338,6 +368,7 @@ setup_bash() {
   info "Bash: linking profile and input settings"
   link_path "bash/.bash_profile" "$HOME_DIR/.bash_profile"
   link_path ".inputrc" "$HOME_DIR/.inputrc"
+  install_ble_sh
   setup_git_completion
 }
 

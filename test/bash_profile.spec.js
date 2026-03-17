@@ -37,6 +37,28 @@ describe('bash_profile functions', () => {
     })
   })
 
+  describe('ble.sh integration', () => {
+    it('should source ble.sh when installed in the standard local path', () => {
+      const tempHome = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'bash-home-'))
+      const bleShDir = path.join(tempHome, '.local', 'share', 'blesh')
+      const bleShPath = path.join(bleShDir, 'ble.sh')
+
+      try {
+        fs.mkdirSync(bleShDir, { recursive: true })
+        fs.writeFileSync(bleShPath, 'export BLE_SH_SOURCED=1\n')
+
+        const command = `HOME="${tempHome}" source ${bashProfilePath} && printenv BLE_SH_SOURCED`
+        const result = execSync(`bash -c '${command}'`, {
+          encoding: 'utf8'
+        }).trim()
+
+        expect(result).toBe('1')
+      } finally {
+        fs.rmSync(tempHome, { recursive: true, force: true })
+      }
+    })
+  })
+
   describe('findfilename', () => {
     it('should find files by name', () => {
       const result = runBash('findfilename package.json')

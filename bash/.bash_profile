@@ -888,6 +888,22 @@ if command -v zoxide >/dev/null 2>&1; then
   eval "$(zoxide init bash)"
 fi
 
+# ble.sh: required by Atuin's Bash integration; source it before Atuin.
+ble_sh_paths=(
+  "$HOME/.local/share/blesh/ble.sh"
+  "/opt/homebrew/share/blesh/ble.sh"
+  "/usr/local/share/blesh/ble.sh"
+)
+
+for candidate in "${ble_sh_paths[@]}"; do
+  if [ -f "$candidate" ]; then
+    # shellcheck source=/dev/null
+    . "$candidate"
+    break
+  fi
+done
+unset ble_sh_paths
+
 # atuin: enhanced shell history and search.
 if command -v atuin >/dev/null 2>&1; then
   eval "$(atuin init bash)"

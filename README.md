@@ -65,14 +65,16 @@ via `postinstall`.
 Main config lives in `bash/.bash_profile`. It includes aliases, functions, and a
 directory-stack powered `cd` replacement. `setup.sh` also links a detected git
 completion script to `~/.git-completion.bash` so git tab completion is available
-when the profile loads, links `.inputrc`, and wires optional shell integrations
-for installed tools.
+when the profile loads, links `.inputrc`, installs `ble.sh` to
+`~/.local/share/blesh` for Bash line editing support, and wires optional shell
+integrations for installed tools.
 
 Installed via `setup.sh` on macOS (Homebrew):
 
 | Tool | Link | Why it is included |
 | --- | --- | --- |
 | `bash-completion@2` | <https://github.com/scop/bash-completion> | Enables broader Bash completions beyond Git. |
+| `ble.sh` | <https://github.com/akinomyoga/ble.sh> | Required by Atuin's recommended Bash integration. |
 | `fzf` | <https://github.com/junegunn/fzf> | Fuzzy file, history, and completion workflows. |
 | `zoxide` | <https://github.com/ajeetdsouza/zoxide> | Faster directory jumping with frecency-based `z`. |
 | `atuin` | <https://atuin.sh/> | Better shell history search and recall. |
