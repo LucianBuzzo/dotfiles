@@ -319,6 +319,7 @@ install_homebrew_formulae() {
     "zoxide"
     "atuin"
     "starship"
+    "zsh-vi-mode"
     "fd"
     "bat"
     "eza"

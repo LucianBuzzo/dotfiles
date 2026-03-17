@@ -6,6 +6,41 @@ const zshrcPath = path.join(__dirname, '..', 'zsh', '.zshrc')
 const TEST_PATH = '/usr/bin:/bin:/usr/sbin:/sbin'
 
 describe('zshrc', () => {
+  it('loads zsh-vi-mode when a plugin path is provided and configures mode-specific cursors', () => {
+    const tempHome = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'zsh-home-'))
+    const pluginDir = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'zsh-vi-mode-'))
+    const pluginPath = path.join(pluginDir, 'zsh-vi-mode.plugin.zsh')
+
+    try {
+      fs.writeFileSync(
+        pluginPath,
+        [
+          'zvm_init() { :; }',
+          'zvm_cursor_style() {',
+          '  printf "%s" "$1"',
+          '}',
+          'if typeset -f zvm_config >/dev/null 2>&1; then',
+          '  zvm_config',
+          'fi',
+          'export ZSH_VI_MODE_PLUGIN_SOURCED=1',
+          '',
+        ].join('\n')
+      )
+
+      const result = execSync(
+        `env -i HOME="${tempHome}" PATH="${TEST_PATH}" ZSH_VI_MODE_PLUGIN_PATH="${pluginPath}" zsh -c 'source "${zshrcPath}" >/dev/null 2>&1; printf "%s:%s:%s:%s" "\${ZSH_VI_MODE_PLUGIN_SOURCED:-0}" "\${ZVM_CURSOR_STYLE_ENABLED:-unset}" "\${ZVM_NORMAL_MODE_CURSOR}" "\${ZVM_INSERT_MODE_CURSOR}"'`,
+        { encoding: 'utf8' }
+      ).trim()
+
+      expect(result).toContain('1:true:')
+      expect(result).not.toContain('#ff8800')
+      expect(result).not.toContain('#00aa00')
+    } finally {
+      fs.rmSync(tempHome, { recursive: true, force: true })
+      fs.rmSync(pluginDir, { recursive: true, force: true })
+    }
+  })
+
   it('loads nvm from ~/.nvm so global node binaries are available in zsh', () => {
     const tempHome = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'zsh-home-'))
     const nvmDir = path.join(tempHome, '.nvm')

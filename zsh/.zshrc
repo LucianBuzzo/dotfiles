@@ -10,7 +10,6 @@ setopt HIST_IGNORE_SPACE
 setopt SHARE_HISTORY
 setopt EXTENDED_GLOB
 
-bindkey -v
 export KEYTIMEOUT=1
 
 HISTFILE="${HISTFILE:-$HOME/.zsh_history}"
@@ -32,6 +31,42 @@ fi
 alias gs='git status'
 alias reloadzsh='source ~/.zshrc'
 alias python='python3'
+
+ZVM_CURSOR_STYLE_ENABLED=true
+ZVM_INIT_MODE=sourcing
+ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
+ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BLINKING_BEAM
+
+zvm_config() {
+  ZVM_NORMAL_MODE_CURSOR="$(zvm_cursor_style "$ZVM_NORMAL_MODE_CURSOR")"
+  ZVM_INSERT_MODE_CURSOR="$(zvm_cursor_style "$ZVM_INSERT_MODE_CURSOR")"
+}
+
+zsh_vi_mode_paths=()
+
+if [ -n "${ZSH_VI_MODE_PLUGIN_PATH:-}" ]; then
+  zsh_vi_mode_paths+=("$ZSH_VI_MODE_PLUGIN_PATH")
+fi
+
+zsh_vi_mode_paths+=(
+  "/opt/homebrew/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh"
+  "/usr/local/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh"
+  "/usr/share/zsh/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh"
+  "/usr/share/zsh/site-contrib/zsh-vi-mode/zsh-vi-mode.plugin.zsh"
+  "$HOME/.zsh-vi-mode/zsh-vi-mode.plugin.zsh"
+)
+
+for candidate in "${zsh_vi_mode_paths[@]}"; do
+  if [ -s "$candidate" ]; then
+    source "$candidate"
+    break
+  fi
+done
+unset zsh_vi_mode_paths
+
+if ! typeset -f zvm_init >/dev/null 2>&1; then
+  bindkey -v
+fi
 
 export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 
@@ -75,4 +110,13 @@ fi
 
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
+
+  # starship's default zle-keymap-select uses `zle reset-prompt`, but
+  # zsh-vi-mode wraps reset-prompt itself. Bypass the wrapper to avoid
+  # recursive redraws when switching modes.
+  if typeset -f starship_zle-keymap-select >/dev/null 2>&1; then
+    starship_zle-keymap-select() {
+      zle .reset-prompt
+    }
+  fi
 fi
