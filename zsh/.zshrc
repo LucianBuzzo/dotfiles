@@ -111,12 +111,12 @@ fi
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 
-  # starship's default zle-keymap-select uses `zle reset-prompt`, but
-  # zsh-vi-mode wraps reset-prompt itself. Bypass the wrapper to avoid
-  # recursive redraws when switching modes.
+  # starship's default zle-keymap-select uses `zle reset-prompt`, which
+  # interacts badly with zsh-vi-mode and this multiline prompt. Use a light
+  # redisplay instead so mode switches don't recurse or eat screen lines.
   if typeset -f starship_zle-keymap-select >/dev/null 2>&1; then
     starship_zle-keymap-select() {
-      zle .reset-prompt
+      zle -R
     }
   fi
 fi
