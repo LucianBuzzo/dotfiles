@@ -144,3 +144,6 @@ if command -v starship >/dev/null 2>&1; then
     }
   fi
 fi
+
+# bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
