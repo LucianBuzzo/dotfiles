@@ -5,7 +5,7 @@
   "editor.fontFamily": "Cascadia Code, Menlo, Monaco, 'Courier New', monospace",
   "editor.fontSize": 13,
   "files.autoSave": "onFocusChange",
-  "terminal.integrated.defaultProfile.osx": "bash",
+  "terminal.integrated.defaultProfile.osx": "zsh",
   "debug.console.fontSize": 14,
   "github.copilot.enable": {
     "*": true,
