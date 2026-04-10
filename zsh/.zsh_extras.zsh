@@ -672,6 +672,16 @@ gravious() {
     sess="${dir_slug}-${timestamp}"
   fi
 
+  if ! command -v openclaw >/dev/null 2>&1; then
+    if ! command -v codex >/dev/null 2>&1; then
+      echo "gravious: neither openclaw nor codex is installed"
+      return 1
+    fi
+    echo "gravious: openclaw not installed, switching to lite mode"
+    codex --yolo
+    return $?
+  fi
+
   openclaw gateway status >/dev/null 2>&1 || openclaw gateway start
   openclaw tui --session "$sess"
 }

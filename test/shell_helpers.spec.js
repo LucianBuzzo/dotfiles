@@ -19,6 +19,42 @@ const runZsh = (command) => {
 }
 
 describe('zsh helper commands', () => {
+  describe('gravious', () => {
+    it('should fall back to codex lite mode when openclaw is unavailable', () => {
+      const tempHome = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'zsh-home-'))
+      const tempBin = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'zsh-bin-'))
+      const codexPath = path.join(tempBin, 'codex')
+
+      try {
+        fs.writeFileSync(
+          codexPath,
+          [
+            '#!/bin/sh',
+            'printf "%s\\n" "$@"',
+            '',
+          ].join('\n')
+        )
+        fs.chmodSync(codexPath, 0o755)
+
+        const result = execSync(
+          `env -i HOME="${tempHome}" PATH="${tempBin}:${TEST_PATH}" zsh -c 'source "${zshrcPath}" >/dev/null 2>&1; gravious test-session'`,
+          {
+            cwd: path.join(__dirname, '..'),
+            encoding: 'utf8',
+          }
+        ).trim()
+
+        expect(result).toBe([
+          'gravious: openclaw not installed, switching to lite mode',
+          '--yolo',
+        ].join('\n'))
+      } finally {
+        fs.rmSync(tempHome, { recursive: true, force: true })
+        fs.rmSync(tempBin, { recursive: true, force: true })
+      }
+    })
+  })
+
   describe('findfilename', () => {
     it('should find files by name', () => {
       const result = runZsh('findfilename package.json')
