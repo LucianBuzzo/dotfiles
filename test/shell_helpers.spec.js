@@ -115,23 +115,6 @@ describe('zsh helper commands', () => {
     })
   })
 
-  describe('colors functions', () => {
-    it('colors_ansi should output color codes', () => {
-      const result = runZsh('colors_ansi')
-      expect(result).toContain('\x1b[')
-    })
-
-    it('colors_256 should output color codes', () => {
-      const result = runZsh('colors_256')
-      expect(result).toContain('\x1b[48;5;')
-    })
-
-    it('colors_solarized should output solarized color info', () => {
-      const result = runZsh('colors_solarized')
-      expect(result).toContain('SOLARIZED')
-    })
-  })
-
   describe('cd_ and pd', () => {
     it('should navigate and update stack', () => {
       const tempDir = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'zsh-test-'))

@@ -89,16 +89,6 @@ else
   alias ll='ls -alhFG'
 fi
 alias gs='git status'
-alias mp='markdown-preview'
-# Generate a 16 char password using md5
-alias generatepass='date | md5 | cut -c1-16'
-alias uistart='cd ~/projects/resin-ui && API_HOST=api.resinstaging.io npm start'
-alias diary='cd ~/journal && vim `date +"%Y-%m-%d"`.markdown'
-alias stagingCommit='curl -s https://dashboard.resinstaging.io | grep COMMIT'
-alias dcup='docker-compose up --build'
-
-alias assignment-start='docker build -t smart-lighting-dashboard . && docker run -p 8000:8000 smart-lighting-dashboard'
-alias assignment-stop='docker rmi smart-lighting-dashboard --force'
 
 # Check if ggrep (GNU grep) is installed
 if command -v ggrep >/dev/null 2>&1; then
@@ -189,76 +179,6 @@ function update_aws_env_vars() {
   rm -f "$tmp_keys"
 
   echo "Done! variables written to $env_file"
-}
-
-###############################################################################
-# Colors
-###############################################################################
-
-# This file echoes a bunch of color codes to the terminal to demonstrate what's
-# available. Each line is the color code of one forground color, out of 17
-# (default + 16 escapes), followed by a test use of that color on all nine
-# background colors (default + 8 escapes).
-function colors_ansi () {
-  T='gYw'   # The test text
-  printf "\n                 40m     41m     42m     43m     44m     45m     46m     47m\n";
-  for FGs in '    m' '   1m' '  30m' '1;30m' '  31m' '1;31m' '  32m' '1;32m' '  33m' '1;33m' '  34m' '1;34m' '  35m' '1;35m' '  36m' '1;36m' '  37m' '1;37m';
-  do FG=${FGs// /}
-    printf " $FGs \033[$FG  $T  "
-    for BG in 40m 41m 42m 43m 44m 45m 46m 47m;
-    do printf "$EINS \033[$FG\033[$BG  $T \033[0m\033[$BG \033[0m";
-    done
-    echo;
-  done
-  echo
-}
-
-# generates an 8 bit color table (256 colors) for reference,
-# using the ANSI CSI+SGR \033[48;5;${val}m for background and
-# \033[38;5;${val}m for text (see "ANSI Code" on Wikipedia)
-function colors_256 () {
-  printf "\n   +  "
-  for i in {0..35}; do
-    printf "%2b " $i
-  done
-  printf "\n\n %3b  " 0
-  for i in {0..15}; do
-    printf "\033[48;5;${i}m  \033[m "
-  done
-  #for i in 16 52 88 124 160 196 232; do
-  for i in {0..6}; do
-    let "i = i*36 +16"
-    printf "\n\n %3b  " $i
-    for j in {0..35}; do
-      let "val = i+j"
-      printf "\033[48;5;${val}m  \033[m "
-    done
-  done
-  printf "\n"
-}
-
-# generates an 8 bit color table (256 colors) showing the colors used by
-# Ethan Schnoover's Solarized theme
-function colors_solarized () {
-  printf "\nSWATCH SOLARIZED HEX     16/8 TERMCOL  XTERM/HEX   L*A*B      RGB         HSB        "
-  printf "\n------ --------- ------- ---- -------  ----------- ---------- ----------- -----------"
-  printf "\n\033[48;5;234m      \033[m base03    #002b36  8/4 brblack  234 #1c1c1c 15 -12 -12   0  43  54 193 100  21"
-  printf "\n\033[48;5;235m      \033[m base02    #073642  0/4 black    235 #262626 20 -12 -12   7  54  66 192  90  26"
-  printf "\n\033[48;5;240m      \033[m base01    #586e75 10/7 brgreen  240 #585858 45 -07 -07  88 110 117 194  25  46"
-  printf "\n\033[48;5;241m      \033[m base00    #657b83 11/7 bryellow 241 #626262 50 -07 -07 101 123 131 195  23  51"
-  printf "\n\033[48;5;244m      \033[m base0     #839496 12/6 brblue   244 #808080 60 -06 -03 131 148 150 186  13  59"
-  printf "\n\033[48;5;245m      \033[m base1     #93a1a1 14/4 brcyan   245 #8a8a8a 65 -05 -02 147 161 161 180   9  63"
-  printf "\n\033[48;5;254m      \033[m base2     #eee8d5  7/7 white    254 #e4e4e4 92 -00  10 238 232 213  44  11  93"
-  printf "\n\033[48;5;230m      \033[m base3     #fdf6e3 15/7 brwhite  230 #ffffd7 97  00  10 253 246 227  44  10  99"
-  printf "\n\033[48;5;136m      \033[m yellow    #b58900  3/3 yellow   136 #af8700 60  10  65 181 137   0  45 100  71"
-  printf "\n\033[48;5;166m      \033[m orange    #cb4b16  9/3 brred    166 #d75f00 50  50  55 203  75  22  18  89  80"
-  printf "\n\033[48;5;160m      \033[m red       #dc322f  1/1 red      160 #d70000 50  65  45 220  50  47   1  79  86"
-  printf "\n\033[48;5;125m      \033[m magenta   #d33682  5/5 magenta  125 #af005f 50  65 -05 211  54 130 331  74  83"
-  printf "\n\033[48;5;61m      \033[m violet    #6c71c4 13/5 brmagenta 61 #5f5faf 50  15 -45 108 113 196 237  45  77"
-  printf "\n\033[48;5;33m      \033[m blue      #268bd2  4/4 blue      33 #0087ff 55 -10 -45  38 139 210 205  82  82"
-  printf "\n\033[48;5;37m      \033[m cyan      #2aa198  6/6 cyan      37 #00afaf 60 -35 -05  42 161 152 175  74  63"
-  printf "\n\033[48;5;64m      \033[m green     #859900  2/2 green     64 #5f8700 60 -20  65 133 153   0  68 100  60"
-  printf "\n"
 }
 
 ###############################################################################
@@ -421,75 +341,6 @@ function pd
   fi
 }
 
-function ss
-{
-  typeset f x
-  typeset -i c=0
-  typeset re="${1-}"
-
-  while (( $c < ${#DS[*]} ))
-  do
-    f=${DS[$c]}
-    if [[ -n "$re" && "$(echo $f | grep $re)" == "" ]]; then
-      ((c=c+1))
-      continue
-    fi
-    if (( ${#f} > 120 )); then
-      x="...$(echo $f | cut -c$((${#f}-120))-)"
-    else
-      x=$f
-    fi
-    echo "$((c+1))) $x"
-    ((c=c+1))
-  done
-}
-
-function csd
-{
-  if [[ $# -eq 0 ]] ; then
-    echo 'Please specify a stack number (type ss to see options):'
-    read stack_arg
-  else
-    stack_arg=$1
-  fi
-
-  if [ $stack_arg == "ss" ]; then
-    ss
-    return 0
-  fi
-
-  typeset num=${stack_arg-}
-  typeset removedDirectory
-
-#  if [ "${num##+([0-9])}" != "" ]; then
-  if [ "$(echo $num | sed 's/^[0-9]*$//')" != "" ]; then
-    c=0
-    re=$num
-    num=0
-    while [ "$c" -lt "${#DS[*]}" ]
-    do
-      if echo "${DS[$c]}" | grep -q $re; then
-        num=$(($c+1))
-        break
-      fi
-      ((c=c+1))
-    done
-  fi
-  if [ "$num" == 0 ]; then
-    echo "usage: csd <number greater than 0 | regular expression>"
-    return 1
-  elif [ "$num" -gt "${#DS[*]}" ]; then
-    echo "$num is beyond the stack size."
-    return 1
-  else
-    num=$((num-1))
-    typeset dir="${DS[$num]}"
-    shiftStackUp $num
-    cd_ "$dir"
-    return $?
-  fi
-}
-
 alias cd=cd_
 
 ###############################################################################
@@ -624,33 +475,9 @@ sops_encrypt() {
 export EDITOR='vim'
 export PATH="$HOME/.yarn/bin:$PATH"
 
-function rununtilfail() {
-  while $@; do :; done
-}
-
-function enterdockercontainer() {
-  docker exec -it $@ bash
-}
-
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-ports() {
-  if [ $# -eq 0 ]; then
-    # Show all listening ports with a compact table.
-    sudo lsof -nP -iTCP -sTCP:LISTEN 2>/dev/null \
-      | awk 'NR==1 {printf "%-20s %-10s %-10s %-6s %s\n", $1, $2, $3, $4, $9} NR>1 {printf "%-20s %-10s %-10s %-6s %s\n", $1, $2, $3, $4, $9}'
-    return 0
-  fi
-
-  for port in "$@"; do
-    echo "=== Port $port ==="
-    sudo lsof -nP -iTCP:$port -sTCP:LISTEN 2>/dev/null \
-      | awk 'NR==1 {printf "%-20s %-10s %-10s %-6s %s\n", $1, $2, $3, $4, $9} NR>1 {printf "%-20s %-10s %-10s %-6s %s\n", $1, $2, $3, $4, $9}'
-    echo
-  done
-}
 
 # PIP
 export PATH="$HOME/Library/Python/3.9/bin:$PATH"
@@ -704,42 +531,6 @@ function mfa_aws_login() {
   unset awsUser otp serialNumber keyID secretAccessKey sessionToken
   echo "Happy Coding!"
   echo "Your kubernetes context is: $(kubectl config current-context)"
-}
-
-merge_renovate_branches() {
-  # Get the current timestamp
-  timestamp=$(date +%Y%m%d%H%M%S)
-
-  # Set the new branch name
-  new_branch_name="lucianbuzzo/${timestamp}_renovate_pipeline"
-
-  # Fetch the latest branches
-  git fetch
-
-  # Get the current branch
-  current_branch=$(git symbolic-ref --short HEAD)
-
-  # Check if the current branch is 'master' or 'main'
-  if [[ "$current_branch" == "master" ]] || [[ "$current_branch" == "main" ]]; then
-    # Create the new branch based on the current branch
-    git checkout -b "$new_branch_name"
-  else
-    new_branch_name="$current_branch"
-  fi
-
-  # Get the list of branches with the 'renovate' and 'dependabot' prefixes
-  branches=$(git branch -r | grep -E 'origin/(renovate|dependabot)')
-
-  # Merge the branches with the new branch
-  for branch in $branches; do
-    echo "Merging $branch into $new_branch_name"
-    git merge --no-ff --allow-unrelated-histories -Xtheirs "$branch" -m "Merged $branch"
-  done
-
-  # Push the new branch to the remote repository
-  git push origin "$new_branch_name"
-
-  echo "All 'renovate' and 'dependabot' branches merged into '$new_branch_name' and pushed to the remote repository."
 }
 
 
@@ -820,24 +611,6 @@ Please generate a concise, one-line commit message for these changes, including 
                 ;;
         esac
     done
-}
-
-docker_publish_ecr() {
-  # Check if both arguments are provided
-  if [ -z "$1" ] || [ -z "$2" ]; then
-    echo "Usage: docker_publish_ecr <image_name> <tag>"
-    return 1
-  fi
-
-  # Assign the provided arguments to variables
-  local IMAGE_NAME="$1"
-  local TAG="$2"
-
-  # Run the commands with the dynamic image name and tag
-  docker build --platform linux/amd64 -t $IMAGE_NAME:$TAG .
-  docker tag $IMAGE_NAME:$TAG 640539939441.dkr.ecr.us-east-1.amazonaws.com/$IMAGE_NAME:$TAG
-  # Push to ECR
-  docker push 640539939441.dkr.ecr.us-east-1.amazonaws.com/$IMAGE_NAME:$TAG
 }
 
 
