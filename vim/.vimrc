@@ -64,6 +64,14 @@ set wildmenu
 set wildmode=list:longest
 set visualbell
 set cursorline
+" Keep terminal Vim cursor shape explicit. Some terminals can leave Vim normal
+" mode with an invisible or stale cursor shape if no mode-specific shape is set.
+if &term =~# 'ghostty\|xterm'
+  let &t_EI = "\<Esc>[2 q"
+  let &t_SI = "\<Esc>[6 q"
+  let &t_SR = "\<Esc>[4 q"
+  autocmd VimLeave * silent! !printf '\033[0 q'
+endif
 "set ttyfast
 set backspace=indent,eol,start
 set relativenumber
@@ -413,4 +421,3 @@ let g:syntastic_javascript_standard_args = ['--fix']
 function! SyntasticCheckHook(errors)
   checktime
 endfunction
-

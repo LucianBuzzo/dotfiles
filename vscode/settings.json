@@ -76,5 +76,6 @@
     "https://json-schema.org/": true,
     "https://biomejs.dev": true
   },
-  "diffEditor.ignoreTrimWhitespace": false
+  "diffEditor.ignoreTrimWhitespace": false,
+  "extensions.ignoreRecommendations": true
 }
