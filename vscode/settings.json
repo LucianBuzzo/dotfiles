@@ -3,7 +3,7 @@
   "editor.inlineSuggest.enabled": true,
   "editor.fontLigatures": "'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'zero', 'onum', 'calt'",
   "editor.fontFamily": "Cascadia Code, Menlo, Monaco, 'Courier New', monospace",
-  "editor.fontSize": 13,
+  "editor.fontSize": 15,
   "files.autoSave": "onFocusChange",
   "terminal.integrated.defaultProfile.osx": "zsh",
   "debug.console.fontSize": 14,

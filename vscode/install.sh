@@ -3,6 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SETTINGS_SRC="$ROOT_DIR/vscode/settings.json"
+SETTINGS_LOCAL_SRC="$ROOT_DIR/vscode/settings.local.json"
 EXTENSIONS_SRC="$ROOT_DIR/vscode/extensions.txt"
 
 VSCODE_USER_DIR="${VSCODE_USER_DIR:-}"
@@ -25,8 +26,49 @@ fi
 SETTINGS_DEST="$VSCODE_USER_DIR/settings.json"
 mkdir -p "$VSCODE_USER_DIR"
 
-ln -sf "$SETTINGS_SRC" "$SETTINGS_DEST"
-echo "Linked VS Code settings to $SETTINGS_DEST"
+if [ -f "$SETTINGS_LOCAL_SRC" ]; then
+  if [ -L "$SETTINGS_DEST" ]; then
+    rm -f "$SETTINGS_DEST"
+  fi
+
+  if command -v jq >/dev/null 2>&1; then
+    jq -s '.[0] * .[1]' "$SETTINGS_SRC" "$SETTINGS_LOCAL_SRC" > "$SETTINGS_DEST"
+  elif command -v python3 >/dev/null 2>&1; then
+    python3 - "$SETTINGS_SRC" "$SETTINGS_LOCAL_SRC" "$SETTINGS_DEST" <<'PY'
+import json
+import sys
+
+base_path, local_path, out_path = sys.argv[1:4]
+
+def merge(base, override):
+    if isinstance(base, dict) and isinstance(override, dict):
+        out = dict(base)
+        for key, value in override.items():
+            out[key] = merge(out[key], value) if key in out else value
+        return out
+    return override
+
+with open(base_path) as f:
+    base = json.load(f)
+
+with open(local_path) as f:
+    local = json.load(f)
+
+merged = merge(base, local)
+
+with open(out_path, "w") as f:
+    json.dump(merged, f, indent=2)
+    f.write("\n")
+PY
+  else
+    echo "Neither jq nor python3 found; cannot merge VS Code settings.local.json" >&2
+    exit 1
+  fi
+  echo "Wrote merged VS Code settings to $SETTINGS_DEST"
+else
+  ln -sf "$SETTINGS_SRC" "$SETTINGS_DEST"
+  echo "Linked VS Code settings to $SETTINGS_DEST"
+fi
 
 if [ "${SKIP_VSCODE_EXTENSIONS:-0}" = "1" ]; then
   echo "Skipping VS Code extension install via SKIP_VSCODE_EXTENSIONS=1"

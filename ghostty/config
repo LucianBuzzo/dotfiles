@@ -50,3 +50,7 @@
 theme = iTerm2 Solarized Light
 font-family = Cascadia Mono PL
 cursor-style = underline
+font-size = 13
+
+# Optional machine-specific overrides (ignored if missing)
+config-file = ?config.local

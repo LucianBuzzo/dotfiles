@@ -548,28 +548,12 @@ if command -v direnv >/dev/null 2>&1; then
 fi
 
 gravious() {
-  local sess dir_slug timestamp
-
-  if [[ -n "$1" ]]; then
-    sess="$1"
-  else
-    dir_slug="$(printf '%s' "${PWD#$HOME/}" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9._-' '-' | sed 's/^-*//; s/-*$//')"
-    timestamp="$(date +"%Y%m%d-%H%M")"
-    sess="${dir_slug}-${timestamp}"
+  if ! command -v hermes >/dev/null 2>&1; then
+    echo "gravious: hermes is not installed"
+    return 1
   fi
 
-  if ! command -v openclaw >/dev/null 2>&1; then
-    if ! command -v codex >/dev/null 2>&1; then
-      echo "gravious: neither openclaw nor codex is installed"
-      return 1
-    fi
-    echo "gravious: openclaw not installed, switching to lite mode"
-    codex --yolo
-    return $?
-  fi
-
-  openclaw gateway status >/dev/null 2>&1 || openclaw gateway start
-  openclaw tui --session "$sess"
+  hermes "$@" --yolo
 }
 
 if command -v eza >/dev/null 2>&1; then
@@ -694,3 +678,8 @@ fi
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# Hermes completion
+if command -v hermes >/dev/null 2>&1; then
+  source <(hermes completion zsh 2>/dev/null)
+fi
