@@ -549,8 +549,9 @@ fi
 
 gravious() {
   if ! command -v hermes >/dev/null 2>&1; then
-    echo "gravious: hermes is not installed"
-    return 1
+    echo "gravious: hermes not installed, switching to lite mode"
+    codex --yolo "$@"
+    return $?
   fi
 
   hermes "$@" --yolo

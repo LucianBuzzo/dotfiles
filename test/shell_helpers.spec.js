@@ -20,7 +20,7 @@ const runZsh = (command) => {
 
 describe('zsh helper commands', () => {
   describe('gravious', () => {
-    it('should fall back to codex lite mode when openclaw is unavailable', () => {
+    it('should fall back to codex lite mode when hermes is unavailable', () => {
       const tempHome = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'zsh-home-'))
       const tempBin = fs.mkdtempSync(path.join(process.env.TMPDIR || '/tmp', 'zsh-bin-'))
       const codexPath = path.join(tempBin, 'codex')
@@ -45,8 +45,9 @@ describe('zsh helper commands', () => {
         ).trim()
 
         expect(result).toBe([
-          'gravious: openclaw not installed, switching to lite mode',
+          'gravious: hermes not installed, switching to lite mode',
           '--yolo',
+          'test-session',
         ].join('\n'))
       } finally {
         fs.rmSync(tempHome, { recursive: true, force: true })
