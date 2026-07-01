@@ -554,7 +554,7 @@ gravious() {
     return $?
   fi
 
-  hermes "$@" --yolo
+  hermes --tui "$@" --yolo
 }
 
 if command -v eza >/dev/null 2>&1; then
