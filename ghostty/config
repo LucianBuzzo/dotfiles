@@ -52,6 +52,8 @@ font-family = Cascadia Mono PL
 cursor-style = bar
 adjust-cursor-thickness = 1
 font-size = 13
+right-click-action = context-menu
 
 # Optional machine-specific overrides (ignored if missing)
 config-file = ?config.local
+
