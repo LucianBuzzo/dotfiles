@@ -569,12 +569,11 @@ alias python='python3'
 
 ZVM_CURSOR_STYLE_ENABLED=true
 ZVM_INIT_MODE=sourcing
-ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
-ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BLINKING_BEAM
 
 zvm_config() {
-  ZVM_NORMAL_MODE_CURSOR="$(zvm_cursor_style "$ZVM_NORMAL_MODE_CURSOR")"
-  ZVM_INSERT_MODE_CURSOR="$(zvm_cursor_style "$ZVM_INSERT_MODE_CURSOR")"
+  # Plugin cursor constants are available when this hook runs.
+  ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
+  ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BLINKING_BEAM
 }
 
 zsh_vi_mode_paths=()

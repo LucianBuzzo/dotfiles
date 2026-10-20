@@ -68,7 +68,8 @@ set cursorline
 " mode with an invisible or stale cursor shape if no mode-specific shape is set.
 if &term =~# 'ghostty\|xterm'
   let &t_EI = "\<Esc>[2 q"
-  let &t_SI = "\<Esc>[6 q"
+  " Blinking bar in insert mode; steady block in normal mode.
+  let &t_SI = "\<Esc>[5 q"
   let &t_SR = "\<Esc>[4 q"
   autocmd VimLeave * silent! !printf '\033[0 q'
 endif
