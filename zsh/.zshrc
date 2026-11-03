@@ -172,10 +172,13 @@ pushStack() {
     fi
   done
 
+  # Truncate via slice: in zsh `unset 'DS[-1]'` blanks the element without
+  # shrinking the array, which made the old while-loop spin forever.
+  # Default the max here too, since non-interactive shells (e.g. agent shell
+  # snapshots) may carry these functions without DIRSTACK_MAX set.
+  local max="${DIRSTACK_MAX:-15}"
   DS=("$newvalue" "${filtered[@]}")
-  while (( ${#DS[@]} > DIRSTACK_MAX )); do
-    unset 'DS[-1]'
-  done
+  DS=("${(@)DS[1,max]}")
 }
 
 pd() {
@@ -221,7 +224,7 @@ cd_() {
     local from="$1"
     local to="$2"
     local c=0
-    local path=
+    local newpath=
     local x
     local numberOfFroms
 
@@ -230,30 +233,30 @@ cd_() {
     while [ "$c" -lt "$numberOfFroms" ]; do
       local subc="$c"
       local tokencount=0
-      path=
+      newpath=
       for subdir in $(echo "$x" | tr '/' '\n' | tail -n +2); do
         if [[ "$subdir" == "$from" ]]; then
           if [ "$subc" -eq "$tokencount" ]; then
-            path="$path/$to"
+            newpath="$newpath/$to"
             subc=$((subc + 1))
           else
-            path="$path/$from"
+            newpath="$newpath/$from"
             tokencount=$((tokencount + 1))
           fi
         else
-          path="$path/$subdir"
+          newpath="$newpath/$subdir"
         fi
       done
-      if [ -d "$path" ]; then
+      if [ -d "$newpath" ]; then
         break
       fi
       c=$((c + 1))
     done
-    if [ "$path" = "$x" ]; then
+    if [ "$newpath" = "$x" ]; then
       echo "Bad substitution"
       ret=1
     else
-      pd "$path"
+      pd "$newpath"
       ret=$?
     fi
   else
