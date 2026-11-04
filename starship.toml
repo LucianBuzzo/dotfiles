@@ -1,4 +1,9 @@
-format = "${custom.face}$time $directory$git_branch$git_status$fill$cmd_duration$line_break$character"
+format = "$hostname${custom.face}$time $directory$git_branch$git_status$fill$cmd_duration$line_break$character"
+
+[hostname]
+ssh_only = true
+format = '[SSH → $hostname]($style) '
+style = 'bold red'
 
 [custom.face]
 command = 'echo "ಠ_ಠ"'
